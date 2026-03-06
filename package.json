@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/index.ts",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -28,12 +29,12 @@
   ],
   "dependencies": {
     "@inquirer/prompts": "^8.3.0",
-    "commander": "^12.1.0"
+    "@types/node": "^20.14.0",
+    "commander": "^12.1.0",
+    "typescript": "^5.5.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.0"
+    "ts-node": "^10.9.2"
   },
   "engines": {
     "node": ">=18.0.0"
