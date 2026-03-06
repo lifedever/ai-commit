@@ -9,7 +9,7 @@ echo "🔧 Installing ai-commit..."
 # Clean previous installation
 if [ -d "$INSTALL_DIR" ]; then
   echo "📦 Removing previous version..."
-  cd "$INSTALL_DIR" && npm unlink -g 2>/dev/null || true
+  (cd "$INSTALL_DIR" && npm unlink -g 2>/dev/null) || true
   rm -rf "$INSTALL_DIR"
 fi
 
