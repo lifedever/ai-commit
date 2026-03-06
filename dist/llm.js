@@ -20,7 +20,7 @@ async function generateCommitMessage(diff, config) {
     const body = {
         model: config.model,
         messages: [
-            { role: "system", content: (0, prompt_1.getSystemPrompt)(config.language) },
+            { role: "system", content: (0, prompt_1.getSystemPrompt)(config.language, config.emoji) },
             { role: "user", content },
         ],
         max_tokens: config.maxTokens,

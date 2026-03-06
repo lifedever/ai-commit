@@ -21,5 +21,6 @@ function loadConfig(overrides) {
         model: overrides?.model ?? process.env.AI_COMMIT_MODEL ?? "deepseek-chat",
         language,
         maxTokens: parseInt(process.env.AI_COMMIT_MAX_TOKENS ?? "500", 10),
+        emoji: overrides?.emoji ?? process.env.AI_COMMIT_EMOJI === "true",
     };
 }

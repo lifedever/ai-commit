@@ -4,9 +4,10 @@ export interface Config {
   model: string;
   language: "en" | "zh";
   maxTokens: number;
+  emoji: boolean;
 }
 
-export function loadConfig(overrides?: Partial<Pick<Config, "language" | "model">>): Config {
+export function loadConfig(overrides?: Partial<Pick<Config, "language" | "model" | "emoji">>): Config {
   const apiKey = process.env.AI_COMMIT_API_KEY;
   if (!apiKey) {
     console.error(
@@ -30,5 +31,6 @@ export function loadConfig(overrides?: Partial<Pick<Config, "language" | "model"
     model: overrides?.model ?? process.env.AI_COMMIT_MODEL ?? "deepseek-chat",
     language,
     maxTokens: parseInt(process.env.AI_COMMIT_MAX_TOKENS ?? "500", 10),
+    emoji: overrides?.emoji ?? process.env.AI_COMMIT_EMOJI === "true",
   };
 }

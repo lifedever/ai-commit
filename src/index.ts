@@ -21,6 +21,7 @@ Options:
   -y, --yes              跳过确认，直接提交
   -l, --language <lang>  指定语言 (en/zh)
   -m, --model <model>    指定模型
+  -e, --emoji            在 commit message 前添加 emoji
   -d, --dry-run          仅生成 message，不提交
   --update               更新到最新版本
   --uninstall            卸载 ai-commit
@@ -65,10 +66,11 @@ const program = new Command();
 program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
-  .version("1.1.0")
+  .version("1.1.1")
   .option("-y, --yes", "跳过确认，直接提交")
   .option("-l, --language <lang>", "指定语言 (en/zh)")
   .option("-m, --model <model>", "指定模型")
+  .option("-e, --emoji", "在 commit message 前添加 emoji")
   .option("-d, --dry-run", "仅生成 message，不提交")
   .action(async (opts) => {
     if (!isGitRepo()) {
@@ -85,6 +87,7 @@ program
     const config = loadConfig({
       language: opts.language,
       model: opts.model,
+      emoji: opts.emoji,
     });
 
     let message: string;

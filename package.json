@@ -1,6 +1,6 @@
 {
   "name": "ai-commit-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "AI-powered Git commit message generator using LLM",
   "main": "dist/index.js",
   "bin": {

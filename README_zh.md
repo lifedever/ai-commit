@@ -61,6 +61,9 @@ ai-commit -l zh
 
 # 临时指定模型
 ai-commit -m gpt-4o-mini
+
+# 带 emoji 的 commit message（如 ✨ feat: add feature）
+ai-commit --emoji
 ```
 
 ## 命令参数
@@ -71,6 +74,7 @@ ai-commit -m gpt-4o-mini
 | `-y, --yes` | 跳过确认，直接提交 |
 | `-l, --language <lang>` | 指定提交信息语言（`en` / `zh`） |
 | `-m, --model <model>` | 临时指定模型 |
+| `-e, --emoji` | 在 commit message 前添加 emoji |
 | `-d, --dry-run` | 仅预览，不提交 |
 | `--update` | 更新到最新版本 |
 | `--uninstall` | 卸载 ai-commit |
@@ -106,6 +110,7 @@ ai-commit --uninstall
 | `AI_COMMIT_MODEL` | 模型名称 | `deepseek-chat` |
 | `AI_COMMIT_LANGUAGE` | 提交信息语言（`en` / `zh`） | `en` |
 | `AI_COMMIT_MAX_TOKENS` | 最大生成 token 数 | `500` |
+| `AI_COMMIT_EMOJI` | 始终添加 emoji（`true` / `false`） | `false` |
 
 ## License
 

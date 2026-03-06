@@ -29,7 +29,7 @@ export async function generateCommitMessage(diff: string, config: Config): Promi
   const body = {
     model: config.model,
     messages: [
-      { role: "system", content: getSystemPrompt(config.language) },
+      { role: "system", content: getSystemPrompt(config.language, config.emoji) },
       { role: "user", content },
     ],
     max_tokens: config.maxTokens,

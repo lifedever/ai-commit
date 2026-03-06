@@ -1,1 +1,1 @@
-export declare function getSystemPrompt(language: string): string;
+export declare function getSystemPrompt(language: string, emoji: boolean): string;

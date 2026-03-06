@@ -61,6 +61,9 @@ ai-commit -l zh
 
 # Use a specific model
 ai-commit -m gpt-4o-mini
+
+# Add emoji to commit message (e.g. ✨ feat: add feature)
+ai-commit --emoji
 ```
 
 ## Options
@@ -71,6 +74,7 @@ ai-commit -m gpt-4o-mini
 | `-y, --yes` | Auto-commit without confirmation |
 | `-l, --language <lang>` | Set commit message language (`en` / `zh`) |
 | `-m, --model <model>` | Use a specific model |
+| `-e, --emoji` | Add emoji to commit message |
 | `-d, --dry-run` | Preview message only, don't commit |
 | `--update` | Update ai-commit to the latest version |
 | `--uninstall` | Uninstall ai-commit |
@@ -106,6 +110,7 @@ ai-commit --uninstall
 | `AI_COMMIT_MODEL` | Model name | `deepseek-chat` |
 | `AI_COMMIT_LANGUAGE` | Message language (`en` / `zh`) | `en` |
 | `AI_COMMIT_MAX_TOKENS` | Max tokens for generation | `500` |
+| `AI_COMMIT_EMOJI` | Always add emoji (`true` / `false`) | `false` |
 
 ## License
 
