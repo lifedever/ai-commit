@@ -18,11 +18,9 @@ echo "📥 Downloading latest version..."
 git clone --depth 1 "$REPO" "$INSTALL_DIR"
 
 cd "$INSTALL_DIR"
-echo "📦 Installing dependencies..."
-npm install --omit=dev --ignore-scripts
-
-echo "🔨 Building..."
-npx --yes typescript tsc
+echo "📦 Installing dependencies and building..."
+npm install --ignore-scripts
+npm run build
 
 echo "🔗 Linking globally..."
 chmod +x dist/index.js
