@@ -11,7 +11,39 @@ import path from "path";
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
 
-if (subcommand === "uninstall") {
+if (subcommand === "--help" || subcommand === "-h") {
+  console.log(`Usage: ai-commit [options]
+
+AI-powered Git commit message generator
+
+Options:
+  -V, --version          显示版本号
+  -y, --yes              跳过确认，直接提交
+  -l, --language <lang>  指定语言 (en/zh)
+  -m, --model <model>    指定模型
+  -d, --dry-run          仅生成 message，不提交
+  --update               更新到最新版本
+  --uninstall            卸载 ai-commit
+  -h, --help             显示帮助信息`);
+  process.exit(0);
+}
+
+if (subcommand === "update" || subcommand === "--update") {
+  console.log("正在更新 ai-commit...");
+  try {
+    execSync("curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash", {
+      stdio: "inherit",
+      shell: "/bin/bash",
+    });
+  } catch {
+    console.error("更新失败，请手动执行:");
+    console.error("  curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash");
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+if (subcommand === "uninstall" || subcommand === "--uninstall") {
   const installDir = path.resolve(process.env.HOME || "~", ".ai-commit");
   console.log("正在卸载 ai-commit...");
   try {
@@ -33,7 +65,7 @@ const program = new Command();
 program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
-  .version("1.0.0")
+  .version("1.1.0")
   .option("-y, --yes", "跳过确认，直接提交")
   .option("-l, --language <lang>", "指定语言 (en/zh)")
   .option("-m, --model <model>", "指定模型")
