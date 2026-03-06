@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { execSync } from "child_process";
+import { execSync, execFileSync } from "child_process";
+import { rmSync } from "fs";
 import { Command } from "commander";
 import { select, input } from "@inquirer/prompts";
 import { loadConfig } from "./config";
@@ -53,7 +54,7 @@ if (subcommand === "uninstall" || subcommand === "--uninstall") {
     // ignore if not linked
   }
   try {
-    execSync(`rm -rf "${installDir}"`, { stdio: "inherit" });
+    rmSync(installDir, { recursive: true, force: true });
   } catch {
     // ignore
   }

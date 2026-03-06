@@ -22,5 +22,5 @@ function getStagedStat() {
     return (0, child_process_1.execSync)("git diff --cached --stat", { encoding: "utf-8" }).trim();
 }
 function commit(message) {
-    (0, child_process_1.execSync)(`git commit -m ${JSON.stringify(message)}`, { stdio: "inherit" });
+    (0, child_process_1.execFileSync)("git", ["commit", "-m", message], { stdio: "inherit" });
 }

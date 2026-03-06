@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
+const fs_1 = require("fs");
 const commander_1 = require("commander");
 const prompts_1 = require("@inquirer/prompts");
 const config_1 = require("./config");
@@ -55,7 +56,7 @@ if (subcommand === "uninstall" || subcommand === "--uninstall") {
         // ignore if not linked
     }
     try {
-        (0, child_process_1.execSync)(`rm -rf "${installDir}"`, { stdio: "inherit" });
+        (0, fs_1.rmSync)(installDir, { recursive: true, force: true });
     }
     catch {
         // ignore

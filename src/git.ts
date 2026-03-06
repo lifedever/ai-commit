@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execSync, execFileSync } from "child_process";
 
 export function isGitRepo(): boolean {
   try {
@@ -19,5 +19,5 @@ export function getStagedStat(): string {
 }
 
 export function commit(message: string): void {
-  execSync(`git commit -m ${JSON.stringify(message)}`, { stdio: "inherit" });
+  execFileSync("git", ["commit", "-m", message], { stdio: "inherit" });
 }
