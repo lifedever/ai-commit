@@ -63,6 +63,19 @@ ai-commit -l zh
 ai-commit -m gpt-4o-mini
 ```
 
+## Options
+
+| Option | Description |
+|---|---|
+| `-V, --version` | Show version number |
+| `-y, --yes` | Auto-commit without confirmation |
+| `-l, --language <lang>` | Set commit message language (`en` / `zh`) |
+| `-m, --model <model>` | Use a specific model |
+| `-d, --dry-run` | Preview message only, don't commit |
+| `--update` | Update ai-commit to the latest version |
+| `--uninstall` | Uninstall ai-commit |
+| `-h, --help` | Show help |
+
 ## Git Alias (Optional)
 
 ```bash
@@ -74,16 +87,14 @@ git ac
 
 ## Update
 
-Re-run the install script to update to the latest version:
-
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
+ai-commit --update
 ```
 
 ## Uninstall
 
 ```bash
-npm unlink -g ai-commit-cli && rm -rf ~/.ai-commit
+ai-commit --uninstall
 ```
 
 ## Environment Variables

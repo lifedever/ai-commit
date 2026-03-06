@@ -63,6 +63,19 @@ ai-commit -l zh
 ai-commit -m gpt-4o-mini
 ```
 
+## 命令参数
+
+| 参数 | 说明 |
+|---|---|
+| `-V, --version` | 显示版本号 |
+| `-y, --yes` | 跳过确认，直接提交 |
+| `-l, --language <lang>` | 指定提交信息语言（`en` / `zh`） |
+| `-m, --model <model>` | 临时指定模型 |
+| `-d, --dry-run` | 仅预览，不提交 |
+| `--update` | 更新到最新版本 |
+| `--uninstall` | 卸载 ai-commit |
+| `-h, --help` | 显示帮助信息 |
+
 ## 设置 Git 别名（可选）
 
 ```bash
@@ -74,16 +87,14 @@ git ac
 
 ## 更新
 
-重新执行安装脚本即可更新到最新版：
-
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
+ai-commit --update
 ```
 
 ## 卸载
 
 ```bash
-npm unlink -g ai-commit-cli && rm -rf ~/.ai-commit
+ai-commit --uninstall
 ```
 
 ## 环境变量
