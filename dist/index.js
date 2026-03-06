@@ -1,11 +1,36 @@
 #!/usr/bin/env node
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const child_process_1 = require("child_process");
 const commander_1 = require("commander");
 const prompts_1 = require("@inquirer/prompts");
 const config_1 = require("./config");
 const git_1 = require("./git");
 const llm_1 = require("./llm");
+const path_1 = __importDefault(require("path"));
+// Handle subcommands before Commander parses
+const subcommand = process.argv[2];
+if (subcommand === "uninstall") {
+    const installDir = path_1.default.resolve(process.env.HOME || "~", ".ai-commit");
+    console.log("正在卸载 ai-commit...");
+    try {
+        (0, child_process_1.execSync)("npm unlink -g ai-commit-cli", { stdio: "inherit" });
+    }
+    catch {
+        // ignore if not linked
+    }
+    try {
+        (0, child_process_1.execSync)(`rm -rf "${installDir}"`, { stdio: "inherit" });
+    }
+    catch {
+        // ignore
+    }
+    console.log("✅ ai-commit 已卸载");
+    process.exit(0);
+}
 const program = new commander_1.Command();
 program
     .name("ai-commit")

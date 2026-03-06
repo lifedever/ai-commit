@@ -1,10 +1,32 @@
 #!/usr/bin/env node
 
+import { execSync } from "child_process";
 import { Command } from "commander";
 import { select, input } from "@inquirer/prompts";
 import { loadConfig } from "./config";
 import { isGitRepo, getStagedDiff, commit } from "./git";
 import { generateCommitMessage } from "./llm";
+import path from "path";
+
+// Handle subcommands before Commander parses
+const subcommand = process.argv[2];
+
+if (subcommand === "uninstall") {
+  const installDir = path.resolve(process.env.HOME || "~", ".ai-commit");
+  console.log("正在卸载 ai-commit...");
+  try {
+    execSync("npm unlink -g ai-commit-cli", { stdio: "inherit" });
+  } catch {
+    // ignore if not linked
+  }
+  try {
+    execSync(`rm -rf "${installDir}"`, { stdio: "inherit" });
+  } catch {
+    // ignore
+  }
+  console.log("✅ ai-commit 已卸载");
+  process.exit(0);
+}
 
 const program = new Command();
 
