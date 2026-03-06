@@ -19,7 +19,7 @@ git clone --depth 1 "$REPO" "$INSTALL_DIR"
 
 cd "$INSTALL_DIR"
 echo "📦 Installing dependencies and building..."
-npm install --ignore-scripts
+npm install --include=dev --ignore-scripts
 npm run build
 
 echo "🔗 Linking globally..."
