@@ -4,18 +4,15 @@
 
 AI-powered Git commit message generator. Analyzes your staged changes and generates [Conventional Commits](https://www.conventionalcommits.org/) formatted messages using any OpenAI-compatible LLM.
 
-## Quick Start
+## Install
+
+One-line install (macOS / Linux):
 
 ```bash
-# Use directly with npx (no install needed)
-npx ai-commit-cli
+curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
 ```
 
-Or install globally:
-
-```bash
-npm install -g ai-commit-cli
-```
+> Requires: Git, Node.js >= 18, npm
 
 ## Configuration
 
@@ -32,7 +29,7 @@ By default, it uses DeepSeek. To use other providers:
 export AI_COMMIT_API_URL="https://api.openai.com/v1/chat/completions"
 export AI_COMMIT_MODEL="gpt-4o-mini"
 
-# Volcengine (火山引擎)
+# Volcengine
 export AI_COMMIT_API_URL="https://ark.cn-beijing.volces.com/api/v3/chat/completions"
 export AI_COMMIT_MODEL="deepseek-v3-2-251201"
 
@@ -69,10 +66,24 @@ ai-commit -m gpt-4o-mini
 ## Git Alias (Optional)
 
 ```bash
-git config --global alias.ac '!npx ai-commit-cli'
+git config --global alias.ac '!ai-commit'
 
 # Then use:
 git ac
+```
+
+## Update
+
+Re-run the install script to update to the latest version:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
+```
+
+## Uninstall
+
+```bash
+npm unlink -g ai-commit-cli && rm -rf ~/.ai-commit
 ```
 
 ## Environment Variables

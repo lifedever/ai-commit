@@ -4,18 +4,15 @@
 
 AI 驱动的 Git Commit Message 生成器。分析暂存的代码变更，通过大语言模型自动生成 [Conventional Commits](https://www.conventionalcommits.org/) 格式的提交信息。
 
-## 快速开始
+## 安装
+
+一行命令安装（macOS / Linux）：
 
 ```bash
-# 免安装直接使用
-npx ai-commit-cli
+curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
 ```
 
-或全局安装：
-
-```bash
-npm install -g ai-commit-cli
-```
+> 前置要求：Git、Node.js >= 18、npm
 
 ## 配置
 
@@ -69,10 +66,24 @@ ai-commit -m gpt-4o-mini
 ## 设置 Git 别名（可选）
 
 ```bash
-git config --global alias.ac '!npx ai-commit-cli'
+git config --global alias.ac '!ai-commit'
 
 # 之后使用：
 git ac
+```
+
+## 更新
+
+重新执行安装脚本即可更新到最新版：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
+```
+
+## 卸载
+
+```bash
+npm unlink -g ai-commit-cli && rm -rf ~/.ai-commit
 ```
 
 ## 环境变量
