@@ -97,6 +97,27 @@ ai-commit
 | `--uninstall` | 卸载 ai-commit |
 | `-h, --help` | 显示帮助信息 |
 
+## 生成信息汇总
+
+每次生成后，底部会以灰色字体显示汇总信息：
+
+```
+──────────────────────────────────────────────────
+feat(auth): add JWT token refresh mechanism
+──────────────────────────────────────────────────
+provider: openai  ·  model: deepseek-chat  ·  tokens: 156  ·  time: 2.8s
+```
+
+包括 provider、模型名称、token 消耗和耗时。
+
+## 自动更新检查
+
+每次运行时自动检查新版本（非阻塞，结果缓存 24 小时）。如有新版本，命令结束后提示：
+
+```
+💡 新版本 v1.4.0 可用（当前 v1.3.1），运行 ai-commit --update 更新
+```
+
 ## 设置 Git 别名（可选）
 
 ```bash

@@ -97,6 +97,25 @@ ai-commit
 | `--uninstall` | Uninstall ai-commit |
 | `-h, --help` | Show help |
 
+## Generation Stats
+
+After each generation, a dim summary line is displayed showing:
+
+```
+──────────────────────────────────────────────────
+feat(auth): add JWT token refresh mechanism
+──────────────────────────────────────────────────
+provider: openai  ·  model: deepseek-chat  ·  tokens: 156  ·  time: 2.8s
+```
+
+## Auto Update Check
+
+Each run automatically checks for new versions (non-blocking, cached for 24 hours). If a newer version is available:
+
+```
+💡 新版本 v1.4.0 可用（当前 v1.3.1），运行 ai-commit --update 更新
+```
+
 ## Git Alias (Optional)
 
 ```bash

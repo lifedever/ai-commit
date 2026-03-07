@@ -8,20 +8,22 @@ AI Commit is a CLI tool that analyzes `git diff` output and calls LLM APIs to ge
 
 ## Architecture
 
-Six source files in `src/`:
+Seven source files in `src/`:
 
 - **index.ts** — CLI entry point (Commander.js). Routes to openai or claude provider based on config
-- **config.ts** — Reads env vars into a `Config` object. `provider` field selects openai/claude
+- **config.ts** — Reads env vars into a `Config` object. `provider` field selects openai/claude. Exports `GenerateResult` type
 - **git.ts** — Runs `git diff --cached` and `git commit -m`
-- **llm.ts** — Sends diff to OpenAI-compatible chat completions endpoint
-- **claude.ts** — Calls `claude -p` CLI to generate commit messages (Claude reads diff + source files itself)
+- **llm.ts** — Sends diff to OpenAI-compatible chat completions endpoint, returns `GenerateResult` with token usage
+- **claude.ts** — Calls `claude -p` CLI to generate commit messages (Claude reads diff + source files itself), returns `GenerateResult`
 - **prompt.ts** — Builds system prompt enforcing Conventional Commits format
+- **update-check.ts** — Non-blocking version check against GitHub, 24h cache in `~/.ai-commit/.update-check`
 
 ## Hard Rules
 
-- After any feature change, **MUST** update README.md, README_zh.md, and docs/ (DESIGN.md, v2ex-post.md, wechat-post.md) to reflect the changes
+- After any feature change, **MUST** update README.md, README_zh.md, and docs/DESIGN.md to reflect the changes
 - After any feature change, **MUST** run `npm run build` to verify compilation passes
 - After any feature change, **MUST** self-test with `ai-commit --dry-run` or equivalent to verify functionality
+- After version bump, **MUST** update `LOCAL_VERSION` in `src/index.ts`, `version` in `package.json`, and tag the release
 
 ## Build & Run
 
