@@ -4,6 +4,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2026-03-08
+
+### Improved
+
+- Code cleanup and repo hygiene optimizations
+- Split CHANGELOG into English and Chinese versions
+
 ## [1.3.2] - 2026-03-08
 
 ### Fixed

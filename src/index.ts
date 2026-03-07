@@ -11,7 +11,7 @@ import { generateCommitMessageWithClaude } from "./claude";
 import { checkForUpdate } from "./update-check";
 import path from "path";
 
-const LOCAL_VERSION = "1.3.2";
+const LOCAL_VERSION = "1.3.3";
 
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
