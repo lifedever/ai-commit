@@ -1,4 +1,5 @@
 export interface Config {
+    provider: "openai" | "claude";
     apiKey: string;
     apiUrl: string;
     model: string;
@@ -6,4 +7,4 @@ export interface Config {
     maxTokens: number;
     emoji: boolean;
 }
-export declare function loadConfig(overrides?: Partial<Pick<Config, "language" | "model" | "emoji">>): Config;
+export declare function loadConfig(overrides?: Partial<Pick<Config, "language" | "model" | "emoji" | "provider">>): Config;

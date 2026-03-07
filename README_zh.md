@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-AI 驱动的 Git Commit Message 生成器。分析暂存的代码变更，通过大语言模型自动生成 [Conventional Commits](https://www.conventionalcommits.org/) 格式的提交信息。
+AI 驱动的 Git Commit Message 生成器。分析暂存的代码变更，通过大语言模型自动生成 [Conventional Commits](https://www.conventionalcommits.org/) 格式的提交信息。支持 OpenAI 兼容 API 和 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 两种 provider。
 
 ## 安装
 
@@ -41,6 +41,15 @@ export AI_COMMIT_MODEL="qwen2.5"
 
 支持任何兼容 OpenAI API 格式的服务。
 
+### Claude Code Provider
+
+如果你已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)，可以直接用它作为 provider。Claude Code 能自主读取项目源文件理解上下文，生成质量更高的 commit message。
+
+```bash
+export AI_COMMIT_PROVIDER="claude"
+# 无需配置 API Key，Claude Code 自己管理认证
+```
+
 ## 使用方式
 
 ```bash
@@ -64,6 +73,13 @@ ai-commit -m gpt-4o-mini
 
 # 带 emoji 的 commit message（如 ✨ feat: add feature）
 ai-commit --emoji
+
+# 使用 Claude Code 作为 provider
+ai-commit -p claude
+
+# 或永久配置
+export AI_COMMIT_PROVIDER="claude"
+ai-commit
 ```
 
 ## 命令参数
@@ -75,6 +91,7 @@ ai-commit --emoji
 | `-l, --language <lang>` | 指定提交信息语言（`en` / `zh`） |
 | `-m, --model <model>` | 临时指定模型 |
 | `-e, --emoji` | 在 commit message 前添加 emoji |
+| `-p, --provider <provider>` | LLM provider（`openai` / `claude`） |
 | `-d, --dry-run` | 仅预览，不提交 |
 | `--update` | 更新到最新版本 |
 | `--uninstall` | 卸载 ai-commit |
@@ -105,7 +122,8 @@ ai-commit --uninstall
 
 | 变量名 | 说明 | 默认值 |
 |---|---|---|
-| `AI_COMMIT_API_KEY` | **必需。** LLM 服务的 API Key | - |
+| `AI_COMMIT_PROVIDER` | LLM provider（`openai` / `claude`） | `openai` |
+| `AI_COMMIT_API_KEY` | **openai 模式必需。** LLM 服务的 API Key | - |
 | `AI_COMMIT_API_URL` | API 端点地址 | `https://api.deepseek.com/v1/chat/completions` |
 | `AI_COMMIT_MODEL` | 模型名称 | `deepseek-chat` |
 | `AI_COMMIT_LANGUAGE` | 提交信息语言（`en` / `zh`） | `en` |

@@ -11,6 +11,7 @@ const prompts_1 = require("@inquirer/prompts");
 const config_1 = require("./config");
 const git_1 = require("./git");
 const llm_1 = require("./llm");
+const claude_1 = require("./claude");
 const path_1 = __importDefault(require("path"));
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
@@ -26,6 +27,7 @@ Options:
   -m, --model <model>    指定模型
   -e, --emoji            在 commit message 前添加 emoji
   -d, --dry-run          仅生成 message，不提交
+  -p, --provider <provider>  LLM provider (openai/claude)
   --update               更新到最新版本
   --uninstall            卸载 ai-commit
   -h, --help             显示帮助信息`);
@@ -68,12 +70,13 @@ const program = new commander_1.Command();
 program
     .name("ai-commit")
     .description("AI-powered Git commit message generator")
-    .version("1.1.1")
+    .version("1.2.0")
     .option("-y, --yes", "跳过确认，直接提交")
     .option("-l, --language <lang>", "指定语言 (en/zh)")
     .option("-m, --model <model>", "指定模型")
     .option("-e, --emoji", "在 commit message 前添加 emoji")
     .option("-d, --dry-run", "仅生成 message，不提交")
+    .option("-p, --provider <provider>", "LLM provider (openai/claude)")
     .action(async (opts) => {
     if (!(0, git_1.isGitRepo)()) {
         console.error("错误: 当前目录不是 Git 仓库");
@@ -88,11 +91,14 @@ program
         language: opts.language,
         model: opts.model,
         emoji: opts.emoji,
+        provider: opts.provider,
     });
     let message;
     try {
         console.log("正在生成 commit message...");
-        message = await (0, llm_1.generateCommitMessage)(diff, config);
+        message = await (config.provider === "claude"
+            ? (0, claude_1.generateCommitMessageWithClaude)(config)
+            : (0, llm_1.generateCommitMessage)(diff, config));
     }
     catch (err) {
         console.error(`生成失败: ${err.message}`);
@@ -109,6 +115,9 @@ program
         console.log("✓ 提交成功");
         return;
     }
+    const generateFn = () => config.provider === "claude"
+        ? (0, claude_1.generateCommitMessageWithClaude)(config)
+        : (0, llm_1.generateCommitMessage)(diff, config);
     // Interactive loop
     while (true) {
         const action = await (0, prompts_1.select)({
@@ -139,7 +148,7 @@ program
         if (action === "regenerate") {
             try {
                 console.log("正在重新生成...");
-                message = await (0, llm_1.generateCommitMessage)(diff, config);
+                message = await generateFn();
                 console.log("\n" + "─".repeat(50));
                 console.log(message);
                 console.log("─".repeat(50) + "\n");

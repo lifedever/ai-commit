@@ -1,4 +1,5 @@
 export interface Config {
+  provider: "openai" | "claude";
   apiKey: string;
   apiUrl: string;
   model: string;
@@ -7,14 +8,18 @@ export interface Config {
   emoji: boolean;
 }
 
-export function loadConfig(overrides?: Partial<Pick<Config, "language" | "model" | "emoji">>): Config {
-  const apiKey = process.env.AI_COMMIT_API_KEY;
-  if (!apiKey) {
+export function loadConfig(overrides?: Partial<Pick<Config, "language" | "model" | "emoji" | "provider">>): Config {
+  const provider = overrides?.provider ?? (process.env.AI_COMMIT_PROVIDER as Config["provider"]) ?? "openai";
+
+  const apiKey = process.env.AI_COMMIT_API_KEY ?? "";
+  if (provider === "openai" && !apiKey) {
     console.error(
       "错误: 未设置 AI_COMMIT_API_KEY 环境变量\n\n" +
       "请在 ~/.bashrc 或 ~/.zshrc 中添加:\n" +
       '  export AI_COMMIT_API_KEY="sk-your-api-key"\n\n' +
-      "支持 DeepSeek、OpenAI 及任何 OpenAI API 兼容服务。"
+      "支持 DeepSeek、OpenAI 及任何 OpenAI API 兼容服务。\n\n" +
+      "或使用 Claude Code 作为 provider:\n" +
+      '  export AI_COMMIT_PROVIDER="claude"'
     );
     process.exit(1);
   }
@@ -26,6 +31,7 @@ export function loadConfig(overrides?: Partial<Pick<Config, "language" | "model"
   }
 
   return {
+    provider,
     apiKey,
     apiUrl: process.env.AI_COMMIT_API_URL ?? "https://api.deepseek.com/v1/chat/completions",
     model: overrides?.model ?? process.env.AI_COMMIT_MODEL ?? "deepseek-chat",

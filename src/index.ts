@@ -7,6 +7,7 @@ import { select, input } from "@inquirer/prompts";
 import { loadConfig } from "./config";
 import { isGitRepo, getStagedDiff, commit } from "./git";
 import { generateCommitMessage } from "./llm";
+import { generateCommitMessageWithClaude } from "./claude";
 import path from "path";
 
 // Handle subcommands before Commander parses
@@ -24,6 +25,7 @@ Options:
   -m, --model <model>    指定模型
   -e, --emoji            在 commit message 前添加 emoji
   -d, --dry-run          仅生成 message，不提交
+  -p, --provider <provider>  LLM provider (openai/claude)
   --update               更新到最新版本
   --uninstall            卸载 ai-commit
   -h, --help             显示帮助信息`);
@@ -67,12 +69,13 @@ const program = new Command();
 program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
-  .version("1.1.1")
+  .version("1.2.0")
   .option("-y, --yes", "跳过确认，直接提交")
   .option("-l, --language <lang>", "指定语言 (en/zh)")
   .option("-m, --model <model>", "指定模型")
   .option("-e, --emoji", "在 commit message 前添加 emoji")
   .option("-d, --dry-run", "仅生成 message，不提交")
+  .option("-p, --provider <provider>", "LLM provider (openai/claude)")
   .action(async (opts) => {
     if (!isGitRepo()) {
       console.error("错误: 当前目录不是 Git 仓库");
@@ -89,12 +92,15 @@ program
       language: opts.language,
       model: opts.model,
       emoji: opts.emoji,
+      provider: opts.provider,
     });
 
     let message: string;
     try {
       console.log("正在生成 commit message...");
-      message = await generateCommitMessage(diff, config);
+      message = await (config.provider === "claude"
+        ? generateCommitMessageWithClaude(config)
+        : generateCommitMessage(diff, config));
     } catch (err: any) {
       console.error(`生成失败: ${err.message}`);
       process.exit(1);
@@ -113,6 +119,11 @@ program
       console.log("✓ 提交成功");
       return;
     }
+
+    const generateFn = () =>
+      config.provider === "claude"
+        ? generateCommitMessageWithClaude(config)
+        : generateCommitMessage(diff, config);
 
     // Interactive loop
     while (true) {
@@ -147,7 +158,7 @@ program
       if (action === "regenerate") {
         try {
           console.log("正在重新生成...");
-          message = await generateCommitMessage(diff, config);
+          message = await generateFn();
           console.log("\n" + "─".repeat(50));
           console.log(message);
           console.log("─".repeat(50) + "\n");

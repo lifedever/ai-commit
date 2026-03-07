@@ -2,7 +2,7 @@
 
 [中文文档](./README_zh.md)
 
-AI-powered Git commit message generator. Analyzes your staged changes and generates [Conventional Commits](https://www.conventionalcommits.org/) formatted messages using any OpenAI-compatible LLM.
+AI-powered Git commit message generator. Analyzes your staged changes and generates [Conventional Commits](https://www.conventionalcommits.org/) formatted messages using any OpenAI-compatible LLM or [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Install
 
@@ -41,6 +41,15 @@ export AI_COMMIT_MODEL="qwen2.5"
 
 Any OpenAI API-compatible service works out of the box.
 
+### Claude Code Provider
+
+If you have [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed, you can use it as the provider. Claude Code can read your source files for better context understanding, producing higher-quality commit messages.
+
+```bash
+export AI_COMMIT_PROVIDER="claude"
+# No API key needed — Claude Code manages its own authentication
+```
+
 ## Usage
 
 ```bash
@@ -64,6 +73,13 @@ ai-commit -m gpt-4o-mini
 
 # Add emoji to commit message (e.g. ✨ feat: add feature)
 ai-commit --emoji
+
+# Use Claude Code as provider
+ai-commit -p claude
+
+# Or set it permanently
+export AI_COMMIT_PROVIDER="claude"
+ai-commit
 ```
 
 ## Options
@@ -75,6 +91,7 @@ ai-commit --emoji
 | `-l, --language <lang>` | Set commit message language (`en` / `zh`) |
 | `-m, --model <model>` | Use a specific model |
 | `-e, --emoji` | Add emoji to commit message |
+| `-p, --provider <provider>` | LLM provider (`openai` / `claude`) |
 | `-d, --dry-run` | Preview message only, don't commit |
 | `--update` | Update ai-commit to the latest version |
 | `--uninstall` | Uninstall ai-commit |
@@ -105,7 +122,8 @@ ai-commit --uninstall
 
 | Variable | Description | Default |
 |---|---|---|
-| `AI_COMMIT_API_KEY` | **Required.** Your LLM API key | - |
+| `AI_COMMIT_PROVIDER` | LLM provider (`openai` / `claude`) | `openai` |
+| `AI_COMMIT_API_KEY` | **Required for openai provider.** Your LLM API key | - |
 | `AI_COMMIT_API_URL` | API endpoint | `https://api.deepseek.com/v1/chat/completions` |
 | `AI_COMMIT_MODEL` | Model name | `deepseek-chat` |
 | `AI_COMMIT_LANGUAGE` | Message language (`en` / `zh`) | `en` |
