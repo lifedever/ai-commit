@@ -4,6 +4,8 @@
 
 AI-powered Git commit message generator. Analyzes your staged changes and generates [Conventional Commits](https://www.conventionalcommits.org/) formatted messages using any OpenAI-compatible LLM or [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
+![demo](docs/images/demo.png)
+
 ## Install
 
 One-line install (macOS / Linux):
