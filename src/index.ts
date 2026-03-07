@@ -11,7 +11,7 @@ import { generateCommitMessageWithClaude } from "./claude";
 import { checkForUpdate } from "./update-check";
 import path from "path";
 
-const LOCAL_VERSION = "1.3.3";
+const LOCAL_VERSION = "1.3.4";
 
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
@@ -22,7 +22,7 @@ if (subcommand === "--help" || subcommand === "-h") {
 AI-powered Git commit message generator
 
 Options:
-  -V, --version          显示版本号
+  -v, -V, --version      显示版本号
   -y, --yes              跳过确认，直接提交
   -l, --language <lang>  指定语言 (en/zh)
   -m, --model <model>    指定模型
@@ -86,7 +86,7 @@ const program = new Command();
 program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
-  .version(LOCAL_VERSION)
+  .version(LOCAL_VERSION, "-v, -V, --version")
   .option("-y, --yes", "跳过确认，直接提交")
   .option("-l, --language <lang>", "指定语言 (en/zh)")
   .option("-m, --model <model>", "指定模型")

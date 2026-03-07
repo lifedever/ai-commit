@@ -4,6 +4,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2026-03-08
+
+### Fixed
+
+- Support `-v` as version flag (in addition to `-V` and `--version`)
+
 ## [1.3.3] - 2026-03-08
 
 ### Improved
