@@ -8,7 +8,10 @@ import { loadConfig, GenerateResult } from "./config";
 import { isGitRepo, getStagedDiff, commit } from "./git";
 import { generateCommitMessage } from "./llm";
 import { generateCommitMessageWithClaude } from "./claude";
+import { checkForUpdate } from "./update-check";
 import path from "path";
+
+const LOCAL_VERSION = "1.3.1";
 
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
@@ -69,7 +72,7 @@ const program = new Command();
 program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
-  .version("1.3.0")
+  .version(LOCAL_VERSION)
   .option("-y, --yes", "跳过确认，直接提交")
   .option("-l, --language <lang>", "指定语言 (en/zh)")
   .option("-m, --model <model>", "指定模型")
@@ -77,6 +80,8 @@ program
   .option("-d, --dry-run", "仅生成 message，不提交")
   .option("-p, --provider <provider>", "LLM provider (openai/claude)")
   .action(async (opts) => {
+    // Start update check early (non-blocking)
+    const updatePromise = checkForUpdate(LOCAL_VERSION);
     if (!isGitRepo()) {
       console.error("错误: 当前目录不是 Git 仓库");
       process.exit(1);
@@ -96,6 +101,14 @@ program
     });
 
     const dim = (s: string) => `\x1b[2m${s}\x1b[0m`;
+    const yellow = (s: string) => `\x1b[33m${s}\x1b[0m`;
+
+    async function showUpdateHint() {
+      const latest = await updatePromise;
+      if (latest) {
+        console.log(yellow(`💡 新版本 v${latest} 可用（当前 v${LOCAL_VERSION}），运行 ai-commit --update 更新`));
+      }
+    }
 
     function printResult(result: GenerateResult, elapsed: string) {
       console.log("\n" + "─".repeat(50));
@@ -128,12 +141,14 @@ program
     let message = result.message;
 
     if (opts.dryRun) {
+      await showUpdateHint();
       return;
     }
 
     if (opts.yes) {
       commit(message);
       console.log("✓ 提交成功");
+      await showUpdateHint();
       return;
     }
 
@@ -157,6 +172,7 @@ program
       if (action === "commit") {
         commit(message);
         console.log("✓ 提交成功");
+        await showUpdateHint();
         return;
       }
 
@@ -169,6 +185,7 @@ program
           commit(edited.trim());
           console.log("✓ 提交成功");
         }
+        await showUpdateHint();
         return;
       }
 
@@ -188,6 +205,7 @@ program
 
       // cancel
       console.log("已取消");
+      await showUpdateHint();
       return;
     }
   });

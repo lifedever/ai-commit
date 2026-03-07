@@ -12,7 +12,9 @@ const config_1 = require("./config");
 const git_1 = require("./git");
 const llm_1 = require("./llm");
 const claude_1 = require("./claude");
+const update_check_1 = require("./update-check");
 const path_1 = __importDefault(require("path"));
+const LOCAL_VERSION = "1.3.1";
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
 if (subcommand === "--help" || subcommand === "-h") {
@@ -70,7 +72,7 @@ const program = new commander_1.Command();
 program
     .name("ai-commit")
     .description("AI-powered Git commit message generator")
-    .version("1.3.0")
+    .version(LOCAL_VERSION)
     .option("-y, --yes", "跳过确认，直接提交")
     .option("-l, --language <lang>", "指定语言 (en/zh)")
     .option("-m, --model <model>", "指定模型")
@@ -78,6 +80,8 @@ program
     .option("-d, --dry-run", "仅生成 message，不提交")
     .option("-p, --provider <provider>", "LLM provider (openai/claude)")
     .action(async (opts) => {
+    // Start update check early (non-blocking)
+    const updatePromise = (0, update_check_1.checkForUpdate)(LOCAL_VERSION);
     if (!(0, git_1.isGitRepo)()) {
         console.error("错误: 当前目录不是 Git 仓库");
         process.exit(1);
@@ -94,6 +98,13 @@ program
         provider: opts.provider,
     });
     const dim = (s) => `\x1b[2m${s}\x1b[0m`;
+    const yellow = (s) => `\x1b[33m${s}\x1b[0m`;
+    async function showUpdateHint() {
+        const latest = await updatePromise;
+        if (latest) {
+            console.log(yellow(`💡 新版本 v${latest} 可用（当前 v${LOCAL_VERSION}），运行 ai-commit --update 更新`));
+        }
+    }
     function printResult(result, elapsed) {
         console.log("\n" + "─".repeat(50));
         console.log(result.message);
@@ -123,11 +134,13 @@ program
     }
     let message = result.message;
     if (opts.dryRun) {
+        await showUpdateHint();
         return;
     }
     if (opts.yes) {
         (0, git_1.commit)(message);
         console.log("✓ 提交成功");
+        await showUpdateHint();
         return;
     }
     const generateFn = () => config.provider === "claude"
@@ -147,6 +160,7 @@ program
         if (action === "commit") {
             (0, git_1.commit)(message);
             console.log("✓ 提交成功");
+            await showUpdateHint();
             return;
         }
         if (action === "edit") {
@@ -158,6 +172,7 @@ program
                 (0, git_1.commit)(edited.trim());
                 console.log("✓ 提交成功");
             }
+            await showUpdateHint();
             return;
         }
         if (action === "regenerate") {
@@ -176,6 +191,7 @@ program
         }
         // cancel
         console.log("已取消");
+        await showUpdateHint();
         return;
     }
 });
