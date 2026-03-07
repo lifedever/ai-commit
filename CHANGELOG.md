@@ -4,6 +4,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2026-03-08
+
+### Fixed
+
+- Use GitHub API instead of raw.githubusercontent.com for version check (avoid CDN cache delay)
+
 ## [1.3.4] - 2026-03-08
 
 ### Fixed

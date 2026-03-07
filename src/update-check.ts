@@ -4,7 +4,7 @@ import path from "path";
 const CACHE_DIR = path.join(process.env.HOME || "~", ".ai-commit");
 const CACHE_FILE = path.join(CACHE_DIR, ".update-check");
 const CHECK_INTERVAL = 24 * 60 * 60 * 1000; // 24h
-const REMOTE_URL = "https://raw.githubusercontent.com/lifedever/ai-commit/main/package.json";
+const REMOTE_URL = "https://api.github.com/repos/lifedever/ai-commit/contents/package.json";
 
 interface CacheData {
   lastCheck: number;
@@ -46,7 +46,10 @@ export function checkForUpdate(localVersion: string): Promise<string | null> {
     );
   }
 
-  return fetch(REMOTE_URL, { signal: AbortSignal.timeout(3000) })
+  return fetch(REMOTE_URL, {
+      signal: AbortSignal.timeout(3000),
+      headers: { "Accept": "application/vnd.github.raw" },
+    })
     .then((res) => res.json())
     .then((data: any) => {
       const latestVersion = data.version as string;
