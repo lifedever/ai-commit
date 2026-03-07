@@ -155,7 +155,7 @@ ai-commit --uninstall
 
 ## 更新日志
 
-查看 [CHANGELOG.md](./CHANGELOG.md) 了解完整版本历史。
+查看 [CHANGELOG_zh.md](./CHANGELOG_zh.md) 了解完整版本历史。
 
 ## License
 

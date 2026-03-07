@@ -1,63 +1,65 @@
 # Changelog
 
+[中文版](./CHANGELOG_zh.md)
+
 All notable changes to this project will be documented in this file.
 
 ## [1.3.2] - 2026-03-08
 
 ### Fixed
 
-- `ai-commit --update` 先检查远程版本号，版本一致时跳过重新安装
+- `ai-commit --update` checks remote version first, skips reinstall when already up to date
 
 ## [1.3.1] - 2026-03-08
 
 ### Added
 
-- 自动更新检查：每次运行异步检查 GitHub 最新版本（非阻塞，3 秒超时）
-- 检查结果缓存 24 小时（`~/.ai-commit/.update-check`）
-- 有新版本时命令结束后以黄色文字提示
+- Auto update check: async version check against GitHub on each run (non-blocking, 3s timeout)
+- Check result cached for 24 hours (`~/.ai-commit/.update-check`)
+- Yellow hint displayed at command exit when new version available
 
 ## [1.3.0] - 2026-03-08
 
 ### Added
 
-- 生成后显示元信息汇总行（provider、model、tokens、耗时），灰色 dim 字体
-- OpenAI 模式返回 token 用量，Claude 模式解析 JSON 返回元信息
+- Generation stats summary line (provider, model, tokens, elapsed time) in dim gray
+- OpenAI mode returns token usage, Claude mode parses JSON for metadata
 
 ## [1.2.0] - 2026-03-08
 
 ### Added
 
-- Claude Code 作为 LLM provider（`-p claude` / `AI_COMMIT_PROVIDER=claude`）
-- Claude Code 自主读取项目源文件理解上下文，生成更高质量的 commit message
-- 新增 `-p, --provider` CLI 参数
-- claude 模式无需配置 API Key
+- Claude Code as LLM provider (`-p claude` / `AI_COMMIT_PROVIDER=claude`)
+- Claude Code reads project source files autonomously for better context, higher quality commit messages
+- New `-p, --provider` CLI option
+- No API key required for Claude mode
 
 ## [1.1.1] - 2026-03-07
 
 ### Added
 
-- emoji 支持：`-e` 参数和 `AI_COMMIT_EMOJI` 环境变量
-- commit message 前添加相关 emoji（✨ feat、🐛 fix 等）
+- Emoji support: `-e` flag and `AI_COMMIT_EMOJI` environment variable
+- Prepend relevant emoji to commit messages (✨ feat, 🐛 fix, etc.)
 
 ## [1.1.0] - 2026-03-07
 
 ### Added
 
-- `ai-commit --update` 更新命令
-- `ai-commit --uninstall` 卸载命令
+- `ai-commit --update` command
+- `ai-commit --uninstall` command
 - MIT License
 
 ### Fixed
 
-- install.sh 增加前置检查和错误处理
+- install.sh: add pre-flight checks and error handling
 
 ## [1.0.0] - 2026-03-07
 
 ### Added
 
-- 核心功能：分析 `git diff --cached`，调用 OpenAI 兼容 API 生成 commit message
-- Conventional Commits 格式输出
-- 交互式确认、编辑、重新生成、取消
-- 中英文支持（`-l en/zh`）
-- 一行命令安装（`install.sh`）
-- 支持 DeepSeek、OpenAI、火山引擎、Ollama 等任何 OpenAI API 兼容服务
+- Core feature: analyze `git diff --cached`, call OpenAI-compatible API to generate commit messages
+- Conventional Commits format output
+- Interactive confirm, edit, regenerate, cancel
+- Chinese/English support (`-l en/zh`)
+- One-line install (`install.sh`)
+- Support DeepSeek, OpenAI, Volcengine, Ollama and any OpenAI API-compatible service
