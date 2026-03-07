@@ -20,7 +20,7 @@ Seven source files in `src/`:
 
 ## Hard Rules
 
-- After any feature change, **MUST** update README.md, README_zh.md, and docs/DESIGN.md to reflect the changes
+- After any feature change, **MUST** update README.md, README_zh.md, docs/DESIGN.md, and CHANGELOG.md to reflect the changes
 - After any feature change, **MUST** run `npm run build` to verify compilation passes
 - After any feature change, **MUST** self-test with `ai-commit --dry-run` or equivalent to verify functionality
 - After version bump, **MUST** update `LOCAL_VERSION` in `src/index.ts`, `version` in `package.json`, and tag the release

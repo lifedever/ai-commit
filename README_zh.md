@@ -153,6 +153,10 @@ ai-commit --uninstall
 | `AI_COMMIT_MAX_TOKENS` | 最大生成 token 数 | `500` |
 | `AI_COMMIT_EMOJI` | 始终添加 emoji（`true` / `false`） | `false` |
 
+## 更新日志
+
+查看 [CHANGELOG.md](./CHANGELOG.md) 了解完整版本历史。
+
 ## License
 
 MIT

@@ -151,6 +151,10 @@ ai-commit --uninstall
 | `AI_COMMIT_MAX_TOKENS` | Max tokens for generation | `500` |
 | `AI_COMMIT_EMOJI` | Always add emoji (`true` / `false`) | `false` |
 
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for release history.
+
 ## License
 
 MIT
