@@ -6,28 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [1.3.6] - 2026-03-08
 
-### Fixed
-
-- Revert version check URL to raw.githubusercontent.com for better compatibility (no rate limit)
-
-## [1.3.5] - 2026-03-08
-
-### Fixed
-
-- Use GitHub API instead of raw.githubusercontent.com for version check (avoid CDN cache delay)
-
-## [1.3.4] - 2026-03-08
-
-### Fixed
-
-- Support `-v` as version flag (in addition to `-V` and `--version`)
-
-## [1.3.3] - 2026-03-08
-
 ### Improved
 
-- Code cleanup and repo hygiene optimizations
-- Split CHANGELOG into English and Chinese versions
+- Support `-v` as version flag
+- Code cleanup and minor optimizations
+- Fix known issues
 
 ## [1.3.2] - 2026-03-08
 
