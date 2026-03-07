@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync, execFileSync } from "child_process";
+import { execSync } from "child_process";
 import { rmSync } from "fs";
 import { Command } from "commander";
 import { select, input } from "@inquirer/prompts";
