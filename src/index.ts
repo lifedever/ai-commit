@@ -11,7 +11,7 @@ import { generateCommitMessageWithClaude } from "./claude";
 import { checkForUpdate } from "./update-check";
 import path from "path";
 
-const LOCAL_VERSION = "1.3.5";
+const LOCAL_VERSION = "1.3.6";
 
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
@@ -39,7 +39,7 @@ if (subcommand === "update" || subcommand === "--update") {
   console.log("正在检查更新...");
   try {
     const result = execSync(
-      'curl -sf --max-time 5 -H "Accept: application/vnd.github.raw" https://api.github.com/repos/lifedever/ai-commit/contents/package.json',
+      'curl -sf --max-time 5 https://raw.githubusercontent.com/lifedever/ai-commit/main/package.json',
       { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] }
     );
     const remote = JSON.parse(result) as { version: string };

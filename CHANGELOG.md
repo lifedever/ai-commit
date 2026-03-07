@@ -4,6 +4,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2026-03-08
+
+### Fixed
+
+- Revert version check URL to raw.githubusercontent.com for better compatibility (no rate limit)
+
 ## [1.3.5] - 2026-03-08
 
 ### Fixed
