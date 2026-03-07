@@ -70,7 +70,7 @@ const program = new commander_1.Command();
 program
     .name("ai-commit")
     .description("AI-powered Git commit message generator")
-    .version("1.2.0")
+    .version("1.2.1")
     .option("-y, --yes", "跳过确认，直接提交")
     .option("-l, --language <lang>", "指定语言 (en/zh)")
     .option("-m, --model <model>", "指定模型")
@@ -96,9 +96,12 @@ program
     let message;
     try {
         console.log("正在生成 commit message...");
+        const start = Date.now();
         message = await (config.provider === "claude"
             ? (0, claude_1.generateCommitMessageWithClaude)(config)
             : (0, llm_1.generateCommitMessage)(diff, config));
+        const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+        console.log(`生成完成，耗时 ${elapsed}s`);
     }
     catch (err) {
         console.error(`生成失败: ${err.message}`);
@@ -148,7 +151,10 @@ program
         if (action === "regenerate") {
             try {
                 console.log("正在重新生成...");
+                const start = Date.now();
                 message = await generateFn();
+                const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+                console.log(`生成完成，耗时 ${elapsed}s`);
                 console.log("\n" + "─".repeat(50));
                 console.log(message);
                 console.log("─".repeat(50) + "\n");
