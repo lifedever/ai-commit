@@ -11,7 +11,7 @@ import { generateCommitMessageWithClaude } from "./claude";
 import { checkForUpdate } from "./update-check";
 import path from "path";
 
-const LOCAL_VERSION = "1.3.1";
+const LOCAL_VERSION = "1.3.2";
 
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
@@ -36,7 +36,21 @@ Options:
 }
 
 if (subcommand === "update" || subcommand === "--update") {
-  console.log("正在更新 ai-commit...");
+  console.log("正在检查更新...");
+  try {
+    const result = execSync(
+      'curl -sf --max-time 5 https://raw.githubusercontent.com/lifedever/ai-commit/main/package.json',
+      { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] }
+    );
+    const remote = JSON.parse(result) as { version: string };
+    if (remote.version === LOCAL_VERSION) {
+      console.log(`当前已是最新版本 v${LOCAL_VERSION}`);
+      process.exit(0);
+    }
+    console.log(`发现新版本 v${remote.version}（当前 v${LOCAL_VERSION}），正在更新...`);
+  } catch {
+    console.log("无法检查远程版本，继续更新...");
+  }
   try {
     execSync("curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash", {
       stdio: "inherit",

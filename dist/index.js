@@ -14,7 +14,7 @@ const llm_1 = require("./llm");
 const claude_1 = require("./claude");
 const update_check_1 = require("./update-check");
 const path_1 = __importDefault(require("path"));
-const LOCAL_VERSION = "1.3.1";
+const LOCAL_VERSION = "1.3.2";
 // Handle subcommands before Commander parses
 const subcommand = process.argv[2];
 if (subcommand === "--help" || subcommand === "-h") {
@@ -36,7 +36,19 @@ Options:
     process.exit(0);
 }
 if (subcommand === "update" || subcommand === "--update") {
-    console.log("正在更新 ai-commit...");
+    console.log("正在检查更新...");
+    try {
+        const result = (0, child_process_1.execSync)('curl -sf --max-time 5 https://raw.githubusercontent.com/lifedever/ai-commit/main/package.json', { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] });
+        const remote = JSON.parse(result);
+        if (remote.version === LOCAL_VERSION) {
+            console.log(`当前已是最新版本 v${LOCAL_VERSION}`);
+            process.exit(0);
+        }
+        console.log(`发现新版本 v${remote.version}（当前 v${LOCAL_VERSION}），正在更新...`);
+    }
+    catch {
+        console.log("无法检查远程版本，继续更新...");
+    }
     try {
         (0, child_process_1.execSync)("curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash", {
             stdio: "inherit",
