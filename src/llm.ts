@@ -1,4 +1,4 @@
-import { Config } from "./config";
+import { Config, GenerateResult } from "./config";
 import { getSystemPrompt } from "./prompt";
 import { getStagedStat } from "./git";
 
@@ -6,6 +6,7 @@ const MAX_DIFF_LENGTH = 15000;
 
 interface ChatResponse {
   choices: { message: { content: string } }[];
+  usage?: { total_tokens?: number };
 }
 
 function prepareDiffContent(diff: string): string {
@@ -23,7 +24,7 @@ function prepareDiffContent(diff: string): string {
   return `[Note: only stat summary provided due to diff size]\n\n${stat}`;
 }
 
-export async function generateCommitMessage(diff: string, config: Config): Promise<string> {
+export async function generateCommitMessage(diff: string, config: Config): Promise<GenerateResult> {
   const content = prepareDiffContent(diff);
 
   const body = {
@@ -57,5 +58,10 @@ export async function generateCommitMessage(diff: string, config: Config): Promi
     throw new Error("API 返回内容为空");
   }
 
-  return message;
+  return {
+    message,
+    provider: "openai",
+    model: config.model,
+    tokensUsed: data.usage?.total_tokens,
+  };
 }

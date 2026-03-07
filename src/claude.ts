@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { Config } from "./config";
+import { Config, GenerateResult } from "./config";
 import { getSystemPrompt } from "./prompt";
 
 function isClaudeInstalled(): boolean {
@@ -11,7 +11,7 @@ function isClaudeInstalled(): boolean {
   }
 }
 
-export async function generateCommitMessageWithClaude(config: Config): Promise<string> {
+export async function generateCommitMessageWithClaude(config: Config): Promise<GenerateResult> {
   if (!isClaudeInstalled()) {
     throw new Error(
       "未找到 claude 命令。请先安装 Claude Code:\n" +
@@ -30,8 +30,8 @@ Output ONLY the commit message, nothing else.`;
 
   const escapedPrompt = prompt.replace(/'/g, "'\\''");
 
-  const result = execSync(
-    `claude -p '${escapedPrompt}' --allowedTools 'Bash(git diff *),Bash(git log *),Read' --output-format text --max-turns 3`,
+  const raw = execSync(
+    `claude -p '${escapedPrompt}' --allowedTools 'Bash(git diff *),Bash(git log *),Read' --output-format json --max-turns 3`,
     {
       timeout: 60000,
       encoding: "utf-8",
@@ -39,10 +39,24 @@ Output ONLY the commit message, nothing else.`;
     }
   );
 
-  const message = result.trim();
+  let message: string;
+  let tokensUsed: number | undefined;
+  let model: string | undefined;
+
+  try {
+    const json = JSON.parse(raw);
+    message = (json.result ?? "").trim();
+    model = json.model;
+    if (json.usage) {
+      tokensUsed = (json.usage.input_tokens ?? 0) + (json.usage.output_tokens ?? 0);
+    }
+  } catch {
+    message = raw.trim();
+  }
+
   if (!message) {
     throw new Error("Claude 返回内容为空");
   }
 
-  return message;
+  return { message, provider: "claude", model, tokensUsed };
 }

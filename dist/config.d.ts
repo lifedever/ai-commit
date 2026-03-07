@@ -1,3 +1,9 @@
+export interface GenerateResult {
+    message: string;
+    provider: string;
+    model?: string;
+    tokensUsed?: number;
+}
 export interface Config {
     provider: "openai" | "claude";
     apiKey: string;

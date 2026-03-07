@@ -25,14 +25,27 @@ Please run \`git diff --cached\` to see the staged changes, then read any releva
 
 Output ONLY the commit message, nothing else.`;
     const escapedPrompt = prompt.replace(/'/g, "'\\''");
-    const result = (0, child_process_1.execSync)(`claude -p '${escapedPrompt}' --allowedTools 'Bash(git diff *),Bash(git log *),Read' --output-format text --max-turns 3`, {
+    const raw = (0, child_process_1.execSync)(`claude -p '${escapedPrompt}' --allowedTools 'Bash(git diff *),Bash(git log *),Read' --output-format json --max-turns 3`, {
         timeout: 60000,
         encoding: "utf-8",
         stdio: ["ignore", "pipe", "pipe"],
     });
-    const message = result.trim();
+    let message;
+    let tokensUsed;
+    let model;
+    try {
+        const json = JSON.parse(raw);
+        message = (json.result ?? "").trim();
+        model = json.model;
+        if (json.usage) {
+            tokensUsed = (json.usage.input_tokens ?? 0) + (json.usage.output_tokens ?? 0);
+        }
+    }
+    catch {
+        message = raw.trim();
+    }
     if (!message) {
         throw new Error("Claude 返回内容为空");
     }
-    return message;
+    return { message, provider: "claude", model, tokensUsed };
 }

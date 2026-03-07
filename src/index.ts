@@ -4,7 +4,7 @@ import { execSync, execFileSync } from "child_process";
 import { rmSync } from "fs";
 import { Command } from "commander";
 import { select, input } from "@inquirer/prompts";
-import { loadConfig } from "./config";
+import { loadConfig, GenerateResult } from "./config";
 import { isGitRepo, getStagedDiff, commit } from "./git";
 import { generateCommitMessage } from "./llm";
 import { generateCommitMessageWithClaude } from "./claude";
@@ -69,7 +69,7 @@ const program = new Command();
 program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
-  .version("1.2.1")
+  .version("1.3.0")
   .option("-y, --yes", "跳过确认，直接提交")
   .option("-l, --language <lang>", "指定语言 (en/zh)")
   .option("-m, --model <model>", "指定模型")
@@ -95,23 +95,37 @@ program
       provider: opts.provider,
     });
 
-    let message: string;
+    const dim = (s: string) => `\x1b[2m${s}\x1b[0m`;
+
+    function printResult(result: GenerateResult, elapsed: string) {
+      console.log("\n" + "─".repeat(50));
+      console.log(result.message);
+      console.log("─".repeat(50));
+      const parts: string[] = [
+        `provider: ${result.provider}`,
+        result.model ? `model: ${result.model}` : "",
+        result.tokensUsed ? `tokens: ${result.tokensUsed}` : "",
+        `time: ${elapsed}s`,
+      ].filter(Boolean);
+      console.log(dim(parts.join("  ·  ")));
+      console.log();
+    }
+
+    let result: GenerateResult;
     try {
       console.log("正在生成 commit message...");
       const start = Date.now();
-      message = await (config.provider === "claude"
+      result = await (config.provider === "claude"
         ? generateCommitMessageWithClaude(config)
         : generateCommitMessage(diff, config));
       const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-      console.log(`生成完成，耗时 ${elapsed}s`);
+      printResult(result, elapsed);
     } catch (err: any) {
       console.error(`生成失败: ${err.message}`);
       process.exit(1);
     }
 
-    console.log("\n" + "─".repeat(50));
-    console.log(message);
-    console.log("─".repeat(50) + "\n");
+    let message = result.message;
 
     if (opts.dryRun) {
       return;
@@ -123,7 +137,7 @@ program
       return;
     }
 
-    const generateFn = () =>
+    const generateFn = (): Promise<GenerateResult> =>
       config.provider === "claude"
         ? generateCommitMessageWithClaude(config)
         : generateCommitMessage(diff, config);
@@ -162,12 +176,10 @@ program
         try {
           console.log("正在重新生成...");
           const start = Date.now();
-          message = await generateFn();
+          result = await generateFn();
           const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-          console.log(`生成完成，耗时 ${elapsed}s`);
-          console.log("\n" + "─".repeat(50));
-          console.log(message);
-          console.log("─".repeat(50) + "\n");
+          message = result.message;
+          printResult(result, elapsed);
         } catch (err: any) {
           console.error(`生成失败: ${err.message}`);
         }

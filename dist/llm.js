@@ -43,5 +43,10 @@ async function generateCommitMessage(diff, config) {
     if (!message) {
         throw new Error("API 返回内容为空");
     }
-    return message;
+    return {
+        message,
+        provider: "openai",
+        model: config.model,
+        tokensUsed: data.usage?.total_tokens,
+    };
 }

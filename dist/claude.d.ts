@@ -1,2 +1,2 @@
-import { Config } from "./config";
-export declare function generateCommitMessageWithClaude(config: Config): Promise<string>;
+import { Config, GenerateResult } from "./config";
+export declare function generateCommitMessageWithClaude(config: Config): Promise<GenerateResult>;
