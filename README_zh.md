@@ -4,7 +4,7 @@
 
 AI 驱动的 Git Commit Message 生成器。分析暂存的代码变更，通过大语言模型自动生成 [Conventional Commits](https://www.conventionalcommits.org/) 格式的提交信息。支持 OpenAI 兼容 API 和 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 两种 provider。
 
-![demo](docs/images/demo.png)
+![demo](docs/images/demo.gif)
 
 ## 安装
 
