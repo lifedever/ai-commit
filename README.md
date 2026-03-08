@@ -115,7 +115,7 @@ provider: openai  ·  model: deepseek-chat  ·  tokens: 156  ·  time: 2.8s
 Each run automatically checks for new versions (non-blocking, cached for 24 hours). If a newer version is available:
 
 ```
-💡 新版本 v1.4.0 可用（当前 v1.3.1），运行 ai-commit --update 更新
+💡 New version v1.4.0 available, run ai-commit --update to update
 ```
 
 ## Git Alias (Optional)
@@ -147,7 +147,7 @@ ai-commit --uninstall
 | `AI_COMMIT_API_KEY` | **Required for openai provider.** Your LLM API key | - |
 | `AI_COMMIT_API_URL` | API endpoint | `https://api.deepseek.com/v1/chat/completions` |
 | `AI_COMMIT_MODEL` | Model name | `deepseek-chat` |
-| `AI_COMMIT_LANGUAGE` | Message language (`en` / `zh`) | `en` |
+| `AI_COMMIT_LANGUAGE` | Message language and CLI language (`en` / `zh`) | `en` |
 | `AI_COMMIT_MAX_TOKENS` | Max tokens for generation | `500` |
 | `AI_COMMIT_EMOJI` | Always add emoji (`true` / `false`) | `false` |
 

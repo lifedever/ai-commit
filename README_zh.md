@@ -149,7 +149,7 @@ ai-commit --uninstall
 | `AI_COMMIT_API_KEY` | **openai 模式必需。** LLM 服务的 API Key | - |
 | `AI_COMMIT_API_URL` | API 端点地址 | `https://api.deepseek.com/v1/chat/completions` |
 | `AI_COMMIT_MODEL` | 模型名称 | `deepseek-chat` |
-| `AI_COMMIT_LANGUAGE` | 提交信息语言（`en` / `zh`） | `en` |
+| `AI_COMMIT_LANGUAGE` | 提交信息和终端提示语言（`en` / `zh`） | `en` |
 | `AI_COMMIT_MAX_TOKENS` | 最大生成 token 数 | `500` |
 | `AI_COMMIT_EMOJI` | 始终添加 emoji（`true` / `false`） | `false` |
 

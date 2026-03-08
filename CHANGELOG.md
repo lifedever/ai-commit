@@ -4,6 +4,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.7] - 2026-03-08
+
+### Added
+
+- CLI prompts now follow `AI_COMMIT_LANGUAGE` setting (default English, `zh` for Chinese)
+
 ## [1.3.6] - 2026-03-08
 
 ### Improved

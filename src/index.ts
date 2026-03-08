@@ -9,11 +9,14 @@ import { isGitRepo, getStagedDiff, commit } from "./git";
 import { generateCommitMessage } from "./llm";
 import { generateCommitMessageWithClaude } from "./claude";
 import { checkForUpdate } from "./update-check";
+import { t, initLanguageFromEnv, setLanguage } from "./i18n";
 import path from "path";
 
-const LOCAL_VERSION = "1.3.6";
+const LOCAL_VERSION = "1.3.7";
 
-// Handle subcommands before Commander parses
+// Init language from env for pre-Commander messages
+initLanguageFromEnv();
+
 const subcommand = process.argv[2];
 
 if (subcommand === "--help" || subcommand === "-h") {
@@ -22,21 +25,21 @@ if (subcommand === "--help" || subcommand === "-h") {
 AI-powered Git commit message generator
 
 Options:
-  -v, -V, --version      显示版本号
-  -y, --yes              跳过确认，直接提交
-  -l, --language <lang>  指定语言 (en/zh)
-  -m, --model <model>    指定模型
-  -e, --emoji            在 commit message 前添加 emoji
-  -d, --dry-run          仅生成 message，不提交
+  -v, -V, --version      ${t("helpVersion")}
+  -y, --yes              ${t("helpYes")}
+  -l, --language <lang>  ${t("helpLanguage")}
+  -m, --model <model>    ${t("helpModel")}
+  -e, --emoji            ${t("helpEmoji")}
+  -d, --dry-run          ${t("helpDryRun")}
   -p, --provider <provider>  LLM provider (openai/claude)
-  --update               更新到最新版本
-  --uninstall            卸载 ai-commit
-  -h, --help             显示帮助信息`);
+  --update               ${t("helpUpdate")}
+  --uninstall            ${t("helpUninstall")}
+  -h, --help             ${t("helpHelp")}`);
   process.exit(0);
 }
 
 if (subcommand === "update" || subcommand === "--update") {
-  console.log("正在检查更新...");
+  console.log(t("checkingUpdate"));
   try {
     const result = execSync(
       'curl -sf --max-time 5 https://raw.githubusercontent.com/lifedever/ai-commit/main/package.json',
@@ -44,12 +47,12 @@ if (subcommand === "update" || subcommand === "--update") {
     );
     const remote = JSON.parse(result) as { version: string };
     if (remote.version === LOCAL_VERSION) {
-      console.log(`当前已是最新版本 v${LOCAL_VERSION}`);
+      console.log(`${t("alreadyLatest")} v${LOCAL_VERSION}`);
       process.exit(0);
     }
-    console.log(`发现新版本 v${remote.version}（当前 v${LOCAL_VERSION}），正在更新...`);
+    console.log(`${t("foundNewVersion")} v${remote.version}（current v${LOCAL_VERSION}），${t("updating")}`);
   } catch {
-    console.log("无法检查远程版本，继续更新...");
+    console.log(t("cannotCheckRemote"));
   }
   try {
     execSync("curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash", {
@@ -57,7 +60,7 @@ if (subcommand === "update" || subcommand === "--update") {
       shell: "/bin/bash",
     });
   } catch {
-    console.error("更新失败，请手动执行:");
+    console.error(`${t("updateFailed")}`);
     console.error("  curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash");
     process.exit(1);
   }
@@ -66,7 +69,7 @@ if (subcommand === "update" || subcommand === "--update") {
 
 if (subcommand === "uninstall" || subcommand === "--uninstall") {
   const installDir = path.resolve(process.env.HOME || "~", ".ai-commit");
-  console.log("正在卸载 ai-commit...");
+  console.log(t("uninstalling"));
   try {
     execSync("npm unlink -g ai-commit-cli", { stdio: "inherit" });
   } catch {
@@ -77,7 +80,7 @@ if (subcommand === "uninstall" || subcommand === "--uninstall") {
   } catch {
     // ignore
   }
-  console.log("✅ ai-commit 已卸载");
+  console.log(`✅ ${t("uninstalled")}`);
   process.exit(0);
 }
 
@@ -87,23 +90,27 @@ program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
   .version(LOCAL_VERSION, "-v, -V, --version")
-  .option("-y, --yes", "跳过确认，直接提交")
-  .option("-l, --language <lang>", "指定语言 (en/zh)")
-  .option("-m, --model <model>", "指定模型")
-  .option("-e, --emoji", "在 commit message 前添加 emoji")
-  .option("-d, --dry-run", "仅生成 message，不提交")
+  .option("-y, --yes", t("helpYes"))
+  .option("-l, --language <lang>", t("helpLanguage"))
+  .option("-m, --model <model>", t("helpModel"))
+  .option("-e, --emoji", t("helpEmoji"))
+  .option("-d, --dry-run", t("helpDryRun"))
   .option("-p, --provider <provider>", "LLM provider (openai/claude)")
   .action(async (opts) => {
-    // Start update check early (non-blocking)
+    // If --language was passed, update i18n language
+    if (opts.language === "zh" || opts.language === "en") {
+      setLanguage(opts.language);
+    }
+
     const updatePromise = checkForUpdate(LOCAL_VERSION);
     if (!isGitRepo()) {
-      console.error("错误: 当前目录不是 Git 仓库");
+      console.error(t("errNotGitRepo"));
       process.exit(1);
     }
 
     const diff = getStagedDiff();
     if (!diff) {
-      console.error("错误: 没有暂存的改动，请先 git add");
+      console.error(t("errNoStagedChanges"));
       process.exit(1);
     }
 
@@ -120,7 +127,7 @@ program
     async function showUpdateHint() {
       const latest = await updatePromise;
       if (latest) {
-        console.log(yellow(`💡 新版本 v${latest} 可用（当前 v${LOCAL_VERSION}），运行 ai-commit --update 更新`));
+        console.log(yellow(`💡 ${t("newVersionAvailable")} v${latest} ${t("runToUpdate")}`));
       }
     }
 
@@ -140,7 +147,7 @@ program
 
     let result: GenerateResult;
     try {
-      console.log("正在生成 commit message...");
+      console.log(t("generating"));
       const start = Date.now();
       result = await (config.provider === "claude"
         ? generateCommitMessageWithClaude(config)
@@ -148,7 +155,7 @@ program
       const elapsed = ((Date.now() - start) / 1000).toFixed(1);
       printResult(result, elapsed);
     } catch (err: any) {
-      console.error(`生成失败: ${err.message}`);
+      console.error(`${t("errGenerate")}: ${err.message}`);
       process.exit(1);
     }
 
@@ -161,7 +168,7 @@ program
 
     if (opts.yes) {
       commit(message);
-      console.log("✓ 提交成功");
+      console.log(`✓ ${t("commitSuccess")}`);
       await showUpdateHint();
       return;
     }
@@ -174,30 +181,30 @@ program
     // Interactive loop
     while (true) {
       const action = await select({
-        message: "请选择操作:",
+        message: t("selectAction"),
         choices: [
-          { name: "确认提交", value: "commit" },
-          { name: "编辑后提交", value: "edit" },
-          { name: "重新生成", value: "regenerate" },
-          { name: "取消", value: "cancel" },
+          { name: t("actionCommit"), value: "commit" },
+          { name: t("actionEdit"), value: "edit" },
+          { name: t("actionRegenerate"), value: "regenerate" },
+          { name: t("actionCancel"), value: "cancel" },
         ],
       });
 
       if (action === "commit") {
         commit(message);
-        console.log("✓ 提交成功");
+        console.log(`✓ ${t("commitSuccess")}`);
         await showUpdateHint();
         return;
       }
 
       if (action === "edit") {
         const edited = await input({
-          message: "编辑 commit message:",
+          message: t("editMessage"),
           default: message,
         });
         if (edited.trim()) {
           commit(edited.trim());
-          console.log("✓ 提交成功");
+          console.log(`✓ ${t("commitSuccess")}`);
         }
         await showUpdateHint();
         return;
@@ -205,20 +212,20 @@ program
 
       if (action === "regenerate") {
         try {
-          console.log("正在重新生成...");
+          console.log(t("regenerating"));
           const start = Date.now();
           result = await generateFn();
           const elapsed = ((Date.now() - start) / 1000).toFixed(1);
           message = result.message;
           printResult(result, elapsed);
         } catch (err: any) {
-          console.error(`生成失败: ${err.message}`);
+          console.error(`${t("errGenerate")}: ${err.message}`);
         }
         continue;
       }
 
       // cancel
-      console.log("已取消");
+      console.log(t("cancelled"));
       await showUpdateHint();
       return;
     }
