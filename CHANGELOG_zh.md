@@ -2,6 +2,13 @@
 
 [English](./CHANGELOG.md)
 
+## [1.3.8] - 2026-03-11
+
+### 修复
+
+- Claude provider 现在能处理大 diff（>15K 字符），直接传入截断后的 diff 而非让 Claude 自己运行 git diff，避免大规模变更时超时
+- 提取共享的 `prepareDiffContent` 工具函数，两种 provider 使用一致的 diff 截断策略
+
 ## [1.3.7] - 2026-03-08
 
 ### 新增

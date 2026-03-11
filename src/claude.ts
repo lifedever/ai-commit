@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import { Config, GenerateResult } from "./config";
 import { getSystemPrompt } from "./prompt";
+import { MAX_DIFF_LENGTH, prepareDiffContent } from "./git";
 
 function isClaudeInstalled(): boolean {
   try {
@@ -11,7 +12,7 @@ function isClaudeInstalled(): boolean {
   }
 }
 
-export async function generateCommitMessageWithClaude(config: Config): Promise<GenerateResult> {
+export async function generateCommitMessageWithClaude(diff: string, config: Config): Promise<GenerateResult> {
   if (!isClaudeInstalled()) {
     throw new Error(
       "未找到 claude 命令。请先安装 Claude Code:\n" +
@@ -21,19 +22,38 @@ export async function generateCommitMessageWithClaude(config: Config): Promise<G
   }
 
   const systemPrompt = getSystemPrompt(config.language, config.emoji);
+  const isLargeDiff = diff.length > MAX_DIFF_LENGTH;
 
-  const prompt = `${systemPrompt}
+  let prompt: string;
+  let claudeArgs: string;
+
+  if (isLargeDiff) {
+    const content = prepareDiffContent(diff);
+    prompt = `${systemPrompt}
+
+Here are the staged changes:
+
+${content}
+
+Based on the above diff, generate a commit message.
+
+Output ONLY the commit message, nothing else.`;
+    claudeArgs = "--output-format json --max-turns 1";
+  } else {
+    prompt = `${systemPrompt}
 
 Please run \`git diff --cached\` to see the staged changes, then read any relevant source files to understand the context. Based on your analysis, generate a commit message.
 
 Output ONLY the commit message, nothing else.`;
+    claudeArgs = "--allowedTools 'Bash(git diff *),Bash(git log *),Read' --output-format json --max-turns 3";
+  }
 
   const escapedPrompt = prompt.replace(/'/g, "'\\''");
 
   const raw = execSync(
-    `claude -p '${escapedPrompt}' --allowedTools 'Bash(git diff *),Bash(git log *),Read' --output-format json --max-turns 3`,
+    `claude -p '${escapedPrompt}' ${claudeArgs}`,
     {
-      timeout: 60000,
+      timeout: isLargeDiff ? 30000 : 60000,
       encoding: "utf-8",
       stdio: ["ignore", "pipe", "pipe"],
     }

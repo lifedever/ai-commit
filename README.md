@@ -52,6 +52,8 @@ export AI_COMMIT_PROVIDER="claude"
 # No API key needed — Claude Code manages its own authentication
 ```
 
+> **Large diffs**: When staged changes exceed 15K characters, ai-commit automatically truncates the diff and passes it directly to Claude instead of letting Claude read files itself. This prevents timeouts on very large changesets.
+
 ## Usage
 
 ```bash

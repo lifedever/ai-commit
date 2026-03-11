@@ -4,6 +4,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.8] - 2026-03-11
+
+### Fixed
+
+- Claude provider now handles large diffs (>15K chars) by passing truncated diff directly instead of letting Claude run `git diff` itself, preventing timeouts on large changesets
+- Extracted shared `prepareDiffContent` utility for consistent diff truncation across both providers
+
 ## [1.3.7] - 2026-03-08
 
 ### Added

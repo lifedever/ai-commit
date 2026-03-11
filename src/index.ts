@@ -150,7 +150,7 @@ program
       console.log(t("generating"));
       const start = Date.now();
       result = await (config.provider === "claude"
-        ? generateCommitMessageWithClaude(config)
+        ? generateCommitMessageWithClaude(diff, config)
         : generateCommitMessage(diff, config));
       const elapsed = ((Date.now() - start) / 1000).toFixed(1);
       printResult(result, elapsed);
@@ -175,7 +175,7 @@ program
 
     const generateFn = (): Promise<GenerateResult> =>
       config.provider === "claude"
-        ? generateCommitMessageWithClaude(config)
+        ? generateCommitMessageWithClaude(diff, config)
         : generateCommitMessage(diff, config);
 
     // Interactive loop

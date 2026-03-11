@@ -119,10 +119,10 @@ function commit(message: string): void;
 ### 3. claude.ts - Claude Code 调用
 
 ```typescript
-async function generateCommitMessageWithClaude(config: Config): Promise<string>;
-// 检查 claude CLI 是否存在，构造 prompt，调用 claude -p
-// Claude 自己运行 git diff --cached 并读取源文件理解上下文
-// 不传 diff 内容，让 Claude 自主获取，这是比 API 模式质量更高的原因
+async function generateCommitMessageWithClaude(diff: string, config: Config): Promise<GenerateResult>;
+// 检查 claude CLI 是否存在，根据 diff 大小选择不同策略：
+// - diff <= 15K 字符：Claude 自己运行 git diff --cached 并读取源文件（高质量模式）
+// - diff > 15K 字符：传入截断后的 diff，跳过工具调用（快速模式，避免超时）
 ```
 
 ### 4. llm.ts - OpenAI 兼容 API 调用
@@ -263,11 +263,13 @@ git config --global alias.ac '!npx ai-commit-cli'
 
 ## Diff 过长处理策略
 
-当 diff 超过模型上下文限制时，按优先级降级：
+当 diff 超过 15,000 字符时，两种 provider 均按优先级降级：
 
-1. 完整 diff（默认）
-2. 截断 diff，保留前 N 行 + `git diff --stat` 概要
+1. 完整 diff（默认，<= 15K 字符）
+2. 截断 diff（前 15K 字符） + `git diff --stat` 概要
 3. 仅发送 `git diff --stat` + 变更文件列表
+
+Claude provider 额外行为：diff <= 15K 时让 Claude 自主运行 git diff 和读取源文件以获取更丰富的上下文；diff > 15K 时直接传入截断后的 diff，跳过工具调用避免超时。
 
 ## 发布历史
 

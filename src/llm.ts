@@ -1,27 +1,10 @@
 import { Config, GenerateResult } from "./config";
 import { getSystemPrompt } from "./prompt";
-import { getStagedStat } from "./git";
-
-const MAX_DIFF_LENGTH = 15000;
+import { prepareDiffContent } from "./git";
 
 interface ChatResponse {
   choices: { message: { content: string } }[];
   usage?: { total_tokens?: number };
-}
-
-function prepareDiffContent(diff: string): string {
-  if (diff.length <= MAX_DIFF_LENGTH) {
-    return diff;
-  }
-
-  const stat = getStagedStat();
-  const truncated = diff.substring(0, MAX_DIFF_LENGTH);
-
-  if (truncated.length + stat.length < MAX_DIFF_LENGTH * 1.5) {
-    return `[Note: diff truncated due to length]\n\n${stat}\n\n${truncated}`;
-  }
-
-  return `[Note: only stat summary provided due to diff size]\n\n${stat}`;
 }
 
 export async function generateCommitMessage(diff: string, config: Config): Promise<GenerateResult> {

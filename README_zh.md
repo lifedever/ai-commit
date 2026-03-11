@@ -52,6 +52,8 @@ export AI_COMMIT_PROVIDER="claude"
 # 无需配置 API Key，Claude Code 自己管理认证
 ```
 
+> **大 diff 处理**：当暂存改动超过 15K 字符时，ai-commit 会自动截断 diff 直接传给 Claude，而不是让 Claude 自己读取文件，以避免在大规模变更时超时。
+
 ## 使用方式
 
 ```bash
