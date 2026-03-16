@@ -2,6 +2,12 @@
 
 [English](./CHANGELOG.md)
 
+## [1.3.9] - 2026-03-16
+
+### 新增
+
+- 支持通过 Homebrew 安装：`brew tap lifedever/tap && brew install ai-commit`
+
 ## [1.3.8] - 2026-03-11
 
 ### 修复

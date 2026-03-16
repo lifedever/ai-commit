@@ -215,11 +215,12 @@ Options:
 ### 安装
 
 ```bash
-# 全局安装
-npm install -g ai-commit-cli
+# Homebrew（macOS）
+brew tap lifedever/tap
+brew install ai-commit
 
-# 或免安装使用
-npx ai-commit-cli
+# 脚本安装（macOS / Linux）
+curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
 ```
 
 ### 使用

@@ -4,6 +4,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.9] - 2026-03-16
+
+### Added
+
+- Homebrew installation support via `brew tap lifedever/tap && brew install ai-commit`
+
 ## [1.3.8] - 2026-03-11
 
 ### Fixed

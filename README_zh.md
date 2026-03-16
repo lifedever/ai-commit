@@ -8,7 +8,14 @@ AI 驱动的 Git Commit Message 生成器。分析暂存的代码变更，通过
 
 ## 安装
 
-一行命令安装（macOS / Linux）：
+### Homebrew（macOS）
+
+```bash
+brew tap lifedever/tap
+brew install ai-commit
+```
+
+### 脚本安装（macOS / Linux）
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash

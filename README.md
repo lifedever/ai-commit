@@ -8,7 +8,14 @@ AI-powered Git commit message generator. Analyzes your staged changes and genera
 
 ## Install
 
-One-line install (macOS / Linux):
+### Homebrew (macOS)
+
+```bash
+brew tap lifedever/tap
+brew install ai-commit
+```
+
+### Shell Script (macOS / Linux)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
