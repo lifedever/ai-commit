@@ -160,6 +160,18 @@ ai-commit --uninstall
 | `AI_COMMIT_MAX_TOKENS` | Max tokens for generation | `500` |
 | `AI_COMMIT_EMOJI` | Always add emoji (`true` / `false`) | `false` |
 
+### Proxy
+
+OpenAI provider supports system proxy via standard environment variables:
+
+```bash
+export HTTPS_PROXY="http://127.0.0.1:7890"
+# or
+export HTTP_PROXY="http://127.0.0.1:7890"
+```
+
+Both `HTTPS_PROXY` / `https_proxy` and `HTTP_PROXY` / `http_proxy` are recognized. `NO_PROXY` / `no_proxy` is also supported to bypass proxy for specific hosts.
+
 ## Changelog
 
 See [CHANGELOG.md](./CHANGELOG.md) for release history.

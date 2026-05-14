@@ -4,6 +4,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.10] - 2026-05-14
+
+### Added
+
+- OpenAI provider now supports system proxy via `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` environment variables
+
 ## [1.3.9] - 2026-03-16
 
 ### Added

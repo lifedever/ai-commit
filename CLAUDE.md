@@ -13,7 +13,7 @@ Seven source files in `src/`:
 - **index.ts** — CLI entry point (Commander.js). Routes to openai or claude provider based on config
 - **config.ts** — Reads env vars into a `Config` object. `provider` field selects openai/claude. Exports `GenerateResult` type
 - **git.ts** — Runs `git diff --cached` and `git commit -m`
-- **llm.ts** — Sends diff to OpenAI-compatible chat completions endpoint, returns `GenerateResult` with token usage
+- **llm.ts** — Sends diff to OpenAI-compatible chat completions endpoint via undici fetch with EnvHttpProxyAgent (supports HTTPS_PROXY/HTTP_PROXY/NO_PROXY), returns `GenerateResult` with token usage
 - **claude.ts** — Calls `claude -p` CLI to generate commit messages (Claude reads diff + source files itself), returns `GenerateResult`
 - **prompt.ts** — Builds system prompt enforcing Conventional Commits format
 - **update-check.ts** — Non-blocking version check against GitHub, 24h cache in `~/.ai-commit/.update-check`
@@ -39,3 +39,5 @@ ai-commit -d    # dry-run test
 Required: `AI_COMMIT_API_KEY` (only for openai provider)
 
 Optional: `AI_COMMIT_PROVIDER` (openai/claude, default openai), `AI_COMMIT_API_URL` (default DeepSeek), `AI_COMMIT_MODEL`, `AI_COMMIT_LANGUAGE` (en/zh), `AI_COMMIT_MAX_TOKENS` (500)
+
+Proxy: `HTTPS_PROXY` / `HTTP_PROXY` (for openai provider), `NO_PROXY` (bypass)

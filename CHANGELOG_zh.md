@@ -2,6 +2,12 @@
 
 [English](./CHANGELOG.md)
 
+## [1.3.10] - 2026-05-14
+
+### 新增
+
+- OpenAI provider 支持通过 `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` 环境变量设置系统代理
+
 ## [1.3.9] - 2026-03-16
 
 ### 新增

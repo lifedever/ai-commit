@@ -1,6 +1,7 @@
 import { Config, GenerateResult } from "./config";
 import { getSystemPrompt } from "./prompt";
 import { prepareDiffContent } from "./git";
+import { EnvHttpProxyAgent, fetch as undiciFetch } from "undici";
 
 interface ChatResponse {
   choices: { message: { content: string } }[];
@@ -9,6 +10,7 @@ interface ChatResponse {
 
 export async function generateCommitMessage(diff: string, config: Config): Promise<GenerateResult> {
   const content = prepareDiffContent(diff);
+  const dispatcher = new EnvHttpProxyAgent();
 
   const body = {
     model: config.model,
@@ -20,13 +22,14 @@ export async function generateCommitMessage(diff: string, config: Config): Promi
     temperature: 0.3,
   };
 
-  const response = await fetch(config.apiUrl, {
+  const response = await undiciFetch(config.apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${config.apiKey}`,
     },
     body: JSON.stringify(body),
+    dispatcher,
   });
 
   if (!response.ok) {

@@ -162,6 +162,18 @@ ai-commit --uninstall
 | `AI_COMMIT_MAX_TOKENS` | 最大生成 token 数 | `500` |
 | `AI_COMMIT_EMOJI` | 始终添加 emoji（`true` / `false`） | `false` |
 
+### 代理
+
+OpenAI provider 支持通过标准环境变量设置系统代理：
+
+```bash
+export HTTPS_PROXY="http://127.0.0.1:7890"
+# 或
+export HTTP_PROXY="http://127.0.0.1:7890"
+```
+
+支持 `HTTPS_PROXY` / `https_proxy` 和 `HTTP_PROXY` / `http_proxy`。同时支持 `NO_PROXY` / `no_proxy` 跳过指定主机的代理。
+
 ## 更新日志
 
 查看 [CHANGELOG_zh.md](./CHANGELOG_zh.md) 了解完整版本历史。
