@@ -15,6 +15,8 @@ brew tap lifedever/tap
 brew install ai-commit
 ```
 
+> 新版 Homebrew 对第三方 tap 有一次性信任授权要求。如果安装时报 "untrusted tap" 错误，先执行 `brew trust lifedever/tap` 再重试。
+
 ### 脚本安装（macOS / Linux）
 
 ```bash

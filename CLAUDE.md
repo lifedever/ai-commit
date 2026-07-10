@@ -23,7 +23,17 @@ Seven source files in `src/`:
 - After any feature change, **MUST** update README.md, README_zh.md, docs/DESIGN.md, and CHANGELOG.md to reflect the changes
 - After any feature change, **MUST** run `npm run build` to verify compilation passes
 - After any feature change, **MUST** self-test with `ai-commit --dry-run` or equivalent to verify functionality
-- After version bump, **MUST** update `LOCAL_VERSION` in `src/index.ts`, `version` in `package.json`, and tag the release
+- Version lives **only** in `package.json` (`src/index.ts` reads it at runtime — do NOT reintroduce a hardcoded version)
+
+## Release Process
+
+1. Bump `version` in `package.json` (single source of truth), update CHANGELOG.md + CHANGELOG_zh.md
+2. Commit `chore(release): vX.Y.Z`, tag `vX.Y.Z` (lightweight, matching history), push main + tag
+3. **Pushing a version bump to main broadcasts an update prompt to all existing users within 24h** (`update-check.ts` reads main's raw package.json; `--update` reinstalls main HEAD via install.sh) — main must be release-ready before the bump lands
+4. Update `homebrew-tap/Formula/ai-commit.rb`: url → new tag tarball, sha256 → **download to a file and hash at least twice, compare** (piped `curl | shasum` has produced a corrupt value right after tag push); `git pull --rebase` the tap before pushing
+5. The formula **must keep its from-source build steps** (`npm install --include=dev` + `npm run build` before the global install): the GitHub tag tarball has no `dist/` and the build hook is `prepublishOnly`, which plain `npm install` never runs — removing them silently ships a formula that installs no binary
+6. Create a GitHub Release: `gh release create vX.Y.Z` with the CHANGELOG entry as notes
+7. Verify: `brew fetch lifedever/tap/ai-commit --force` (checksum) and ideally `brew reinstall ai-commit && brew test ai-commit` end-to-end
 
 ## Build & Run
 

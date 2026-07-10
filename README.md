@@ -15,6 +15,8 @@ brew tap lifedever/tap
 brew install ai-commit
 ```
 
+> Newer Homebrew versions require a one-time approval for third-party taps. If you see an "untrusted tap" error, run `brew trust lifedever/tap` and retry.
+
 ### Shell Script (macOS / Linux)
 
 ```bash
