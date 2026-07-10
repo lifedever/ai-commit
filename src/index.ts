@@ -12,7 +12,7 @@ import { checkForUpdate } from "./update-check";
 import { t, initLanguageFromEnv, setLanguage } from "./i18n";
 import path from "path";
 
-const LOCAL_VERSION = "1.3.7";
+const LOCAL_VERSION = "1.4.0";
 
 // Init language from env for pre-Commander messages
 initLanguageFromEnv();
@@ -35,6 +35,13 @@ Options:
   --update               ${t("helpUpdate")}
   --uninstall            ${t("helpUninstall")}
   -h, --help             ${t("helpHelp")}`);
+  process.exit(0);
+}
+
+// Commander only parses two flags per option, so "--version" in the
+// .version() flags below is silently dropped — handle it here.
+if (subcommand === "--version") {
+  console.log(LOCAL_VERSION);
   process.exit(0);
 }
 

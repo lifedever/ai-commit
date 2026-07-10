@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 
 - **Breaking**: Node.js >= 22.19 is now required (undici 8 dependency)
 
+### Fixed
+
+- `--version` long flag now works (previously only `-v` / `-V` were recognized)
+
 ## [1.3.9] - 2026-03-16
 
 ### Added
