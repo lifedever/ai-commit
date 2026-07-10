@@ -4,11 +4,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.3.10] - 2026-05-14
+## [1.4.0] - 2026-07-10
 
 ### Added
 
-- OpenAI provider now supports system proxy via `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` environment variables
+- OpenAI provider now supports system proxy via `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` environment variables (#1, thanks @gleox)
+
+### Changed
+
+- **Breaking**: Node.js >= 22.19 is now required (undici 8 dependency)
 
 ## [1.3.9] - 2026-03-16
 

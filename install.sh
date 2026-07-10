@@ -3,7 +3,8 @@ set -e
 
 INSTALL_DIR="$HOME/.ai-commit"
 REPO="https://github.com/lifedever/ai-commit.git"
-REQUIRED_NODE_VERSION=18
+REQUIRED_NODE_MAJOR=22
+REQUIRED_NODE_MINOR=19
 
 # ─── Helper ──────────────────────────────────────
 fail() {
@@ -13,12 +14,13 @@ fail() {
 
 # ─── Pre-flight checks ──────────────────────────
 command -v git  >/dev/null 2>&1 || fail "未找到 git，请先安装 Git"
-command -v node >/dev/null 2>&1 || fail "未找到 node，请先安装 Node.js >= $REQUIRED_NODE_VERSION"
-command -v npm  >/dev/null 2>&1 || fail "未找到 npm，请先安装 Node.js >= $REQUIRED_NODE_VERSION"
+command -v node >/dev/null 2>&1 || fail "未找到 node，请先安装 Node.js >= $REQUIRED_NODE_MAJOR.$REQUIRED_NODE_MINOR"
+command -v npm  >/dev/null 2>&1 || fail "未找到 npm，请先安装 Node.js >= $REQUIRED_NODE_MAJOR.$REQUIRED_NODE_MINOR"
 
 NODE_MAJOR=$(node -e "process.stdout.write(String(process.versions.node.split('.')[0]))")
-if [ "$NODE_MAJOR" -lt "$REQUIRED_NODE_VERSION" ]; then
-  fail "Node.js 版本过低 (v$(node -v))，需要 >= $REQUIRED_NODE_VERSION"
+NODE_MINOR=$(node -e "process.stdout.write(String(process.versions.node.split('.')[1]))")
+if [ "$NODE_MAJOR" -lt "$REQUIRED_NODE_MAJOR" ] || { [ "$NODE_MAJOR" -eq "$REQUIRED_NODE_MAJOR" ] && [ "$NODE_MINOR" -lt "$REQUIRED_NODE_MINOR" ]; }; then
+  fail "Node.js 版本过低 (v$(node -v))，需要 >= $REQUIRED_NODE_MAJOR.$REQUIRED_NODE_MINOR（undici 8 依赖要求）"
 fi
 
 # ─── Clean previous installation ─────────────────

@@ -21,7 +21,7 @@ brew install ai-commit
 curl -fsSL https://raw.githubusercontent.com/lifedever/ai-commit/main/install.sh | bash
 ```
 
-> Requires: Git, Node.js >= 18, npm
+> Requires: Git, Node.js >= 22.19, npm
 
 ## Configuration
 
