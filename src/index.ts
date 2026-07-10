@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from "child_process";
-import { rmSync } from "fs";
+import { rmSync, readFileSync } from "fs";
 import { Command } from "commander";
 import { select, input } from "@inquirer/prompts";
 import { loadConfig, GenerateResult } from "./config";
@@ -12,7 +12,12 @@ import { checkForUpdate } from "./update-check";
 import { t, initLanguageFromEnv, setLanguage } from "./i18n";
 import path from "path";
 
-const LOCAL_VERSION = "1.4.0";
+// package.json is the single source of truth for the version; npm always
+// installs it alongside dist/, in both install.sh (npm link) and Homebrew
+// (std_npm_args) layouts.
+const LOCAL_VERSION: string = JSON.parse(
+  readFileSync(path.join(__dirname, "..", "package.json"), "utf-8")
+).version;
 
 // Init language from env for pre-Commander messages
 initLanguageFromEnv();
