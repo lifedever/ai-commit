@@ -114,6 +114,13 @@ function getStagedDiff(): string;
 
 function commit(message: string): void;
 // 执行 git commit -m "message"
+
+function getUnstagedTrackedFiles(): string[];
+// 执行 git diff --name-only，返回已跟踪文件中有未暂存改动的文件列表
+
+function stageTrackedChanges(): void;
+// 执行 git add -u，对齐 git commit -a 语义：只暂存已跟踪文件的修改和删除，
+// 永远不暂存未跟踪文件（避免把 .env、临时文件等意外带入提交）
 ```
 
 ### 3. claude.ts - Claude Code 调用

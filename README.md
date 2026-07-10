@@ -75,6 +75,9 @@ ai-commit
 # Auto-commit without confirmation
 ai-commit -y
 
+# Stage all tracked changes first (like git commit -a)
+ai-commit -a
+
 # Preview only, don't commit
 ai-commit --dry-run
 
@@ -95,11 +98,14 @@ export AI_COMMIT_PROVIDER="claude"
 ai-commit
 ```
 
+> If nothing is staged but tracked files have unstaged changes, ai-commit lists them and asks whether to stage them (y/N). Untracked files are never staged automatically — `git add` them explicitly. With `-y`, nothing is ever staged implicitly.
+
 ## Options
 
 | Option | Description |
 |---|---|
 | `-V, --version` | Show version number |
+| `-a, --all` | Stage all tracked changes first (like `git commit -a`; untracked files excluded) |
 | `-y, --yes` | Auto-commit without confirmation |
 | `-l, --language <lang>` | Set commit message language (`en` / `zh`) |
 | `-m, --model <model>` | Use a specific model |

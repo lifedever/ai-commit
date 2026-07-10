@@ -3,9 +3,9 @@
 import { execSync } from "child_process";
 import { rmSync, readFileSync } from "fs";
 import { Command } from "commander";
-import { select, input } from "@inquirer/prompts";
+import { select, input, confirm } from "@inquirer/prompts";
 import { loadConfig, GenerateResult } from "./config";
-import { isGitRepo, getStagedDiff, commit } from "./git";
+import { isGitRepo, getStagedDiff, commit, getUnstagedTrackedFiles, stageTrackedChanges } from "./git";
 import { generateCommitMessage } from "./llm";
 import { generateCommitMessageWithClaude } from "./claude";
 import { checkForUpdate } from "./update-check";
@@ -31,6 +31,7 @@ AI-powered Git commit message generator
 
 Options:
   -v, -V, --version      ${t("helpVersion")}
+  -a, --all              ${t("helpAll")}
   -y, --yes              ${t("helpYes")}
   -l, --language <lang>  ${t("helpLanguage")}
   -m, --model <model>    ${t("helpModel")}
@@ -102,6 +103,7 @@ program
   .name("ai-commit")
   .description("AI-powered Git commit message generator")
   .version(LOCAL_VERSION, "-v, -V, --version")
+  .option("-a, --all", t("helpAll"))
   .option("-y, --yes", t("helpYes"))
   .option("-l, --language <lang>", t("helpLanguage"))
   .option("-m, --model <model>", t("helpModel"))
@@ -120,10 +122,39 @@ program
       process.exit(1);
     }
 
-    const diff = getStagedDiff();
+    if (opts.all) {
+      stageTrackedChanges();
+    }
+
+    let diff = getStagedDiff();
     if (!diff) {
-      console.error(t("errNoStagedChanges"));
-      process.exit(1);
+      const unstaged = getUnstagedTrackedFiles();
+      // -y explicitly skips all interaction — never stage implicitly under it
+      if (unstaged.length === 0 || opts.yes) {
+        console.error(t("errNoStagedChanges"));
+        if (unstaged.length > 0) console.error(t("hintStage"));
+        process.exit(1);
+      }
+      console.log(t("unstagedFound").replace("{n}", String(unstaged.length)));
+      for (const f of unstaged.slice(0, 20)) console.log(`  ${f}`);
+      if (unstaged.length > 20) console.log(`  ... +${unstaged.length - 20}`);
+      let ok = false;
+      try {
+        ok = await confirm({ message: t("askStageAll"), default: false });
+      } catch {
+        // Ctrl+C / closed stdin during the prompt — treat as "no"
+      }
+      if (!ok) {
+        console.log(t("cancelled"));
+        console.log(t("hintStage"));
+        process.exit(1);
+      }
+      stageTrackedChanges();
+      diff = getStagedDiff();
+      if (!diff) {
+        console.error(t("errNoStagedChanges"));
+        process.exit(1);
+      }
     }
 
     const config = loadConfig({

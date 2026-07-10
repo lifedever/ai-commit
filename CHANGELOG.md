@@ -4,6 +4,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2026-07-10
+
+### Added
+
+- `-a` / `--all` flag: stage all tracked changes before generating (mirrors `git commit -a`; untracked files are never staged)
+- When nothing is staged but tracked files have unstaged changes, ai-commit now lists them and asks whether to stage them (y/N) instead of erroring out; `-y` keeps the strict error and never stages implicitly
+
 ## [1.4.0] - 2026-07-10
 
 ### Added

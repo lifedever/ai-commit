@@ -8,6 +8,7 @@ const messages = {
   helpModel: { en: "Specify model", zh: "指定模型" },
   helpEmoji: { en: "Add emoji before commit message", zh: "在 commit message 前添加 emoji" },
   helpDryRun: { en: "Generate message only, do not commit", zh: "仅生成 message，不提交" },
+  helpAll: { en: "Stage all tracked changes first (like git commit -a)", zh: "先暂存所有已跟踪文件的改动（同 git commit -a）" },
   helpUpdate: { en: "Update to latest version", zh: "更新到最新版本" },
   helpUninstall: { en: "Uninstall ai-commit", zh: "卸载 ai-commit" },
   helpHelp: { en: "Show help", zh: "显示帮助信息" },
@@ -35,6 +36,11 @@ const messages = {
   },
   errUnsupportedLang: { en: "Error: Unsupported language", zh: "错误: 不支持的语言" },
   errGenerate: { en: "Generation failed", zh: "生成失败" },
+
+  // Staging
+  unstagedFound: { en: "Found unstaged changes in {n} tracked file(s):", zh: "检测到 {n} 个已跟踪文件有未暂存的改动:" },
+  askStageAll: { en: "Stage them and continue? (untracked files are not included)", zh: "暂存这些改动并继续？（不包含未跟踪的新文件）" },
+  hintStage: { en: "Tip: `git add -p` to pick changes, or `ai-commit -a` to stage all tracked changes", zh: "提示: 用 `git add -p` 挑选改动，或用 `ai-commit -a` 暂存全部已跟踪改动" },
 
   // Main flow
   generating: { en: "Generating commit message...", zh: "正在生成 commit message..." },

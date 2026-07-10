@@ -75,6 +75,9 @@ ai-commit
 # 跳过确认，直接提交
 ai-commit -y
 
+# 先自动暂存所有已跟踪文件的改动（同 git commit -a）
+ai-commit -a
+
 # 仅预览，不提交
 ai-commit --dry-run
 
@@ -95,11 +98,14 @@ export AI_COMMIT_PROVIDER="claude"
 ai-commit
 ```
 
+> 没有暂存改动但已跟踪文件有未暂存修改时，ai-commit 会列出这些文件并询问是否暂存（y/N）。未跟踪的新文件永远不会被自动暂存，需要显式 `git add`。`-y` 模式下绝不会隐式暂存任何内容。
+
 ## 命令参数
 
 | 参数 | 说明 |
 |---|---|
 | `-V, --version` | 显示版本号 |
+| `-a, --all` | 先暂存所有已跟踪文件的改动（同 `git commit -a`，不含未跟踪文件） |
 | `-y, --yes` | 跳过确认，直接提交 |
 | `-l, --language <lang>` | 指定提交信息语言（`en` / `zh`） |
 | `-m, --model <model>` | 临时指定模型 |

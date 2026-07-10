@@ -22,6 +22,20 @@ export function commit(message: string): void {
   execFileSync("git", ["commit", "-m", message], { stdio: "inherit" });
 }
 
+export function getUnstagedTrackedFiles(): string[] {
+  const out = execFileSync("git", ["diff", "--name-only"], {
+    encoding: "utf-8",
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  return out.trim().split("\n").filter(Boolean);
+}
+
+// Mirrors `git commit -a`: stages modifications and deletions of tracked
+// files only — untracked files are deliberately never staged.
+export function stageTrackedChanges(): void {
+  execFileSync("git", ["add", "-u"], { stdio: "ignore" });
+}
+
 export const MAX_DIFF_LENGTH = 15000;
 
 export function prepareDiffContent(diff: string): string {
